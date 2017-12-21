@@ -1,0 +1,35 @@
+<div class="asset-viewer" [class.fullscreen]="isFullscreen" (contextmenu)="disableContextMenu($event)">
+  <!-- IIIF Image Viewer-->
+  <div [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed">
+    <div class="more-results overlay-wrap--center" id="loader-wrapper" *ngIf="!openSeaDragonReady"><i class="icon-asterisk icon-spin icon-large"></i></div>
+    <div class="item osd-wrap" [attr.id]="'osd-' + asset.id + '-' + index" [attr.zoomValue]="lastZoomValue"></div>
+  </div>
+  <!-- Video Player-->
+  <div class="video-player" [class.hidden]="!isKalturaAsset || mediaLoadingFailed">
+    <iframe id="{{ 'kalturaIframe-' + index }}" frameborder="0"></iframe>
+  </div>
+  <!-- Audio Player-->
+  <div *ngIf="asset.typeName() == 'audio'">
+    <audio class="item video-player" id="audio-{{ asset.id + '-' + index }}" controls style="display:none;">
+      <source [attr.src]="asset.downloadLink" type="audio/MPEG">{{ 'audio_error' }}
+    </audio>
+  </div>
+  <!-- Large thumbnail fallback-->
+  <div id="fallbackViewer" *ngIf="mediaLoadingFailed"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="_assets.makeThumbUrl(asset.imgURL, thumbnailSize)" (error)="thumbnailError($event)"></div>
+  <div class="button-group asset-viewer__buttons" id="imageButtons-{{ asset.id + '-' + index }}">
+    <button class="btn btn--icon" [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed" id="zoomIn-{{ asset.id + '-' + index}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button>
+    <button class="btn btn--icon" [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed" id="zoomOut-{{ asset.id + '-' + index }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button>
+    <button class="btn btn--icon" [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed" id="zoomFit-{{ asset.id + '-' + index }}" title="Zoom Fit"><i class="icon icon-fit"></i></button>
+    <button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ asset.id + '-' + index }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button>
+    <button class="btn btn--icon" *ngIf="isFullscreen &amp;&amp; index !== 0" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
+  </div>
+  <div class="fullscreen-metadata" *ngIf="isFullscreen" [class.slideAway]="!showCaption">
+    <div class="vertical-center-wrap"><i class="icon icon-direction icon-left" *ngIf="assetCompareCount == 1 &amp;&amp; !quizMode" [class.disabled]="assetNumber &lt;= 1" title="Previous in results" (click)="prevPage.emit()"></i>
+      <div class="title" [innerHtml]="asset.title"></div><i class="icon icon-direction icon-right" *ngIf="assetCompareCount == 1 &amp;&amp; !quizMode" [class.disabled]="assetNumber &gt;= assetGroupCount" title="Next in results" (click)="nextPage.emit()"></i>
+      <div class="meta-block small">
+        <div class="creator" [innerHtml]="asset.creator"></div>
+        <div class="date" [innerHtml]="asset.date"></div>
+      </div>
+    </div>
+  </div>
+</div>
