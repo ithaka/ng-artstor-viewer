@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core'
 import { Subscription } from "rxjs/Subscription"
 import * as OpenSeadragon from "openseadragon"
-
 // Internal Dependencies
 import { Asset } from "../asset.interface"
 
+// Browser API delcarations
+declare var ActiveXObject: any
 
 @Component({
   selector: 'ng-artstor-viewer',
@@ -49,15 +50,15 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private osdViewer: any
 
     constructor(
-        private _assets: AssetService,
-        private _auth: AuthService,
-        private _analytics: Angulartics2
+        // private _assets: AssetService,
+        // private _auth: AuthService,
+        // private _analytics: Angulartics2
     ) {
 
     }
 
     ngOnInit() {
-        this._analytics.eventTrack.next({ action:"viewAsset", properties: { category: "asset", label: this.asset.id }})
+        // this._analytics.eventTrack.next({ action:"viewAsset", properties: { category: "asset", label: this.asset.id }})
 
         if (this.asset) {
             this.loadViewer();
@@ -159,18 +160,18 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         });
 
         // ---- Use handler in case other error crops up
-        this.osdViewer.addOnceHandler('open-failed', (e) => {
+        this.osdViewer.addOnceHandler('open-failed', (e: Event) => {
             console.error("OSD Opening source failed:",e)
             this.mediaLoadingFailed = true;
             this.osdViewer.destroy();
         });
 
-        this.osdViewer.addHandler('pan', (value) => {
+        this.osdViewer.addHandler('pan', (value: any) => {
             // Save viewport pan for downloading the view
             this.asset.viewportDimensions.center = value.center
         });
 
-        this.osdViewer.addHandler('zoom', (value) => {
+        this.osdViewer.addHandler('zoom', (value: any) => {
             this.lastZoomValue = value.zoom;
 
             // Save viewport values for downloading the view
@@ -179,7 +180,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.asset.viewportDimensions.zoom = value.zoom
         });
 
-        this.osdViewer.addOnceHandler('tile-load-failed', (e) => {
+        this.osdViewer.addOnceHandler('tile-load-failed', (e: Event) => {
             console.warn("OSD Loading tiles failed:", e)
             this.mediaLoadingFailed = true;
             this.osdViewer.destroy();
@@ -203,7 +204,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this.osdViewer.navigator.element.style.marginBottom = "50px";
     }
 
-    private requestFullScreen(el): void {
+    private requestFullScreen(el: any): void {
         // Supports most browsers and their versions.
         var requestMethod = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen;
 
@@ -270,22 +271,22 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private loadKaltura(): void {
         let targetId = 'kalturaIframe-' + this.index;
 
-        // We gotta always say it's type 24, the type id for Kaltura!
-        this._assets.getFpxInfo(this.asset.id, 24)
-            .then(data => {
-                console.log(data);
-                this.kalturaUrl = data['imageUrl'];
-                if (this._auth.getEnv() == 'test') {
-                    this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
-                }
-                document.getElementById(targetId).setAttribute('src', this.kalturaUrl);
+        // // We gotta always say it's type 24, the type id for Kaltura!
+        // this._assets.getFpxInfo(this.asset.id, 24)
+        //     .then(data => {
+        //         console.log(data);
+        //         this.kalturaUrl = data['imageUrl'];
+        //         if (this._auth.getEnv() == 'test') {
+        //             this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
+        //         }
+        //         document.getElementById(targetId).setAttribute('src', this.kalturaUrl);
 
-                this.isKalturaAsset = true;
-                this.isOpenSeaDragonAsset = false;
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        //         this.isKalturaAsset = true;
+        //         this.isOpenSeaDragonAsset = false;
+        //     })
+        //     .catch(err => {
+        //         console.log(err);
+        //     });
     };
 
     // Keep: We will want to dynamically load the Kaltura player
@@ -326,7 +327,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * disableContextMenu
      * - Disable browser context menu / right click on the image viewer
      */
-    private disableContextMenu(event): boolean{
+    private disableContextMenu(event: Event): boolean{
         return false;
     }
 
@@ -335,7 +336,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Decrements the thumbnail size
      * - Workaround for missing sizes of particular thumbnails
      */
-    private thumbnailError(event) : void {
+    private thumbnailError(event: Event) : void {
         this.thumbnailSize--
     }
 
