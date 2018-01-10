@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core'
 import { Subscription } from "rxjs/Subscription"
-import * as OpenSeadragon from "openseadragon"
+import * as OpenSeadragon from 'node_modules/openseadragon/build/openseadragon/openseadragon.js';
 // Internal Dependencies
 import { Asset } from "../asset.interface"
 
@@ -8,7 +8,7 @@ import { Asset } from "../asset.interface"
 declare var ActiveXObject: any
 
 @Component({
-  selector: 'ng-artstor-viewer',
+  selector: 'artstor-viewer',
   templateUrl: './artstor-viewer.component.html',
   styleUrls: ['./artstor-viewer.component.scss']
 })

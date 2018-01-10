@@ -43,7 +43,7 @@
         defaultExtension: 'js',
         main: 'index'
       },
-      'quickstart-lib': {
+      'artstor-viewer': {
         main: 'index.js',
         defaultExtension: 'js',
         meta: {

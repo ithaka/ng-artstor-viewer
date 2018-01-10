@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LibService } from 'quickstart-lib';
+import { ArtstorViewer } from 'artstor-viewer';
 
 @Component({
   selector: 'demo-app',
@@ -7,7 +7,7 @@ import { LibService } from 'quickstart-lib';
 })
 export class AppComponent {
   meaning: number;
-  constructor(libService: LibService) {
-    this.meaning = libService.getMeaning();
+  constructor(libService: ArtstorViewer) {
+    // this.meaning = libService.getMeaning();
   }
 }

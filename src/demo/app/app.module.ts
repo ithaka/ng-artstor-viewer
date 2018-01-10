@@ -1,11 +1,11 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { LibModule } from 'quickstart-lib';
 
 import { AppComponent }  from './app.component';
+import { ArtstorViewer, ArtstorViewerModule } from 'artstor-viewer';
 
 @NgModule({
-  imports:      [ BrowserModule, LibModule],
+  imports:      [ BrowserModule, ArtstorViewerModule ],
   declarations: [ AppComponent ],
   bootstrap:    [ AppComponent ]
 })

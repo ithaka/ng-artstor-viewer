@@ -47,7 +47,7 @@ is preferred, [Just-in-time](#appendix-supporting-jit) compilation should be sup
 Make sure you have at least Node 6.9 and NPM 3.0 installed.
 Then ...
 
-1. Create a project folder (you can call it `quickstart-lib` and rename it later).
+1. Create a project folder (you can call it `artstor-viewer` and rename it later).
 1. [Clone](#clone "Clone it from github") or [download](#download "download it from github") the **QuickStart Library seed** into your project folder.
 1. Install npm packages.
 1. Run `npm start` to launch the sample application.
@@ -58,19 +58,19 @@ Then ...
 Perform the _clone-to-launch_ steps with these terminal commands.
 
 ```
-git clone https://github.com/filipesilva/angular-quickstart-lib.git
-cd angular-quickstart-lib
+git clone https://github.com/filipesilva/angular-artstor-viewer.git
+cd angular-artstor-viewer
 npm install
 npm start
 ```
 
 
 ### Download
-[Download the QuickStart Library seed](https://github.com/filipesilva/angular-quickstart-lib/archive/master.zip)
+[Download the QuickStart Library seed](https://github.com/filipesilva/angular-artstor-viewer/archive/master.zip)
 and unzip it into your project folder. Then perform the remaining steps with these terminal commands.
 
 ```
-cd angular-quickstart-lib
+cd angular-artstor-viewer
 npm install
 npm start
 ```
@@ -251,7 +251,7 @@ Then install it from your other repo using a relative path to the dist folder:
 Every package on NPM has a unique name, and so should yours. 
 If you haven't already, now is the time to change the name of your library.
 
-Use your editor to search the project for all instances of `quickstart-lib` and change it
+Use your editor to search the project for all instances of `artstor-viewer` and change it
 to your intended name (also in `dash-case` format).
 The library name is mentioned on at least these files: 
 
