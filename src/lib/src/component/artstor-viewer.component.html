@@ -15,7 +15,8 @@
     </audio>
   </div>
   <!-- Large thumbnail fallback-->
-  <div id="fallbackViewer" *ngIf="mediaLoadingFailed"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="_assets.makeThumbUrl(asset.imgURL, thumbnailSize)" (error)="thumbnailError($event)"></div>
+  <span *ngIf="mediaLoadingFailed">Fallback Thumbnail HERE</span>
+  <!--<div id="fallbackViewer" *ngIf="mediaLoadingFailed"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="_assets.makeThumbUrl(asset.imgURL, thumbnailSize)" (error)="thumbnailError($event)"></div>-->
   <div class="button-group asset-viewer__buttons" id="imageButtons-{{ asset.id + '-' + index }}">
     <button class="btn btn--icon" [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed" id="zoomIn-{{ asset.id + '-' + index}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button>
     <button class="btn btn--icon" [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed" id="zoomOut-{{ asset.id + '-' + index }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button>

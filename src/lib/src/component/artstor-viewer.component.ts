@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core'
-import { Subscription } from "rxjs/Subscription"
-import * as OpenSeadragon from 'node_modules/openseadragon/build/openseadragon/openseadragon.js';
+import { Subscription } from 'rxjs/Subscription'
+import { HttpClient } from '@angular/common/http'
+
+import * as OpenSeadragon from 'openseadragon'
 // Internal Dependencies
 import { Asset } from "../asset.interface"
 
@@ -14,16 +16,18 @@ declare var ActiveXObject: any
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
-    @Input() asset: Asset
-    @Input() index: number
-    @Input() assetCompareCount: number
-    @Input() assetGroupCount: number
-    @Input() assetNumber: number
-    @Input() assets: Asset[]
-    @Input() prevAssetResults: any
-    @Input() isFullscreen: boolean
-    @Input() showCaption: boolean
-    @Input() quizMode: boolean
+    @Input() assetId: string
+
+    private asset: Asset
+    private index: number
+    private assetCompareCount: number
+    private assetGroupCount: number
+    private assetNumber: number
+    private assets: Asset[]
+    private prevAssetResults: any
+    private isFullscreen: boolean
+    private showCaption: boolean
+    private quizMode: boolean
 
     @Output() fullscreenChange = new EventEmitter()
     @Output() nextPage = new EventEmitter()
@@ -53,8 +57,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // private _assets: AssetService,
         // private _auth: AuthService,
         // private _analytics: Angulartics2
+        private _http: HttpClient
     ) {
-
+        this.asset = new Asset(this.assetId, this._http)
     }
 
     ngOnInit() {
