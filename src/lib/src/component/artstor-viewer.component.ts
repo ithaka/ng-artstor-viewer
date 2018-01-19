@@ -1,25 +1,47 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter } from '@angular/core'
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription'
 import { HttpClient } from '@angular/common/http'
 
-import * as OpenSeadragon from 'openseadragon'
+import * as OpenSeadragon from 'openseadragon';
+import * as krpano from '../viewers/krpano.js';
 // Internal Dependencies
 import { Asset } from "../asset.interface"
 
 // Browser API delcarations
 declare var ActiveXObject: any
+declare var embedpano: any
+
+enum viewerState {
+  inactive, 
+  loading,
+  playing,
+  recording
+}
 
 @Component({
   selector: 'artstor-viewer',
+  providers: [],
   templateUrl: './artstor-viewer.component.html',
-  styleUrls: ['./artstor-viewer.component.scss']
+  styleUrls: ['./artstor-viewer.component.css']
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
-    @Input() assetId: string
+    private _assetId: string = ''
+    @Input() set assetId(value: string) {
+        if (value != this._assetId) {
+            this._assetId = value
+            this.loadAssetById()
+        }
+    }
+    get assetId(): string {
+        // other logic
+        return this._assetId
+    }
 
     private asset: Asset
-    private index: number
+    private assetSub: Subscription
+
+    private index: number = 0
     private assetCompareCount: number
     private assetGroupCount: number
     private assetNumber: number
@@ -39,6 +61,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // private isFullscreen: boolean = false
     private openSeaDragonReady: boolean = false
     private isOpenSeaDragonAsset: boolean = false
+    private isKrpanoAsset: boolean = false
     private isKalturaAsset: boolean = false
     private mediaLoadingFailed: boolean = false
     private removableAsset: boolean = false
@@ -57,19 +80,14 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // private _assets: AssetService,
         // private _auth: AuthService,
         // private _analytics: Angulartics2
+        // private hostElement: ElementRef,
         private _http: HttpClient
-    ) {
-        this.asset = new Asset(this.assetId, this._http)
+    ) { 
+
     }
 
     ngOnInit() {
-        // this._analytics.eventTrack.next({ action:"viewAsset", properties: { category: "asset", label: this.asset.id }})
-
-        if (this.asset) {
-            this.loadViewer();
-        }
-
-
+        this.loadAssetById()
         // Assets don't initialize with fullscreen variable
         // And assets beyond the first/primary only show in fullscreen
         if (this.index > 0) {
@@ -100,6 +118,20 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    private loadAssetById(): void {
+        this.asset = new Asset(this.assetId, this._http)
+        
+        if (this.assetSub) {
+            this.assetSub.unsubscribe()
+        }
+
+        this.assetSub = this.asset.isDataLoaded.subscribe(loaded => {
+            if (loaded) {
+                this.loadViewer()
+            }
+        })
+    }
+
     private loadViewer(): void {
         // Object types that need loaders
         switch (this.asset.typeName()) {
@@ -118,6 +150,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                 // Kaltura media
                 this.loadKaltura();
                 break;
+            case 'qtvr':
+                this.loadKrpanoViewer();
+                break;
         }
     }
 
@@ -126,6 +161,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * Gets information needed to load IIIF viewers, such as OpenSeaDragon
      */
     private loadIIIF(): void {
+        console.log("LOAD IIIF")
         if (this.asset.tileSource) {
             this.tileSource = this.asset.tileSource
             this.loadOpenSea()
@@ -139,13 +175,14 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
+        console.log("Load open sea")
         this.isOpenSeaDragonAsset = true;
         // OpenSeaDragon Initializer
         let id =  this.asset.id + '-' + this.index;
         this.osdViewer = new OpenSeadragon({
             id: 'osd-' + id,
             // prefix for Icon Images
-            prefixUrl: 'assets/img/osd/',
+            // prefixUrl: 'assets/img/osd/',
             tileSources: this.tileSource,
             gestureSettingsMouse: {
                 scrollToZoom: true,
@@ -207,6 +244,33 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.osdViewer.ButtonGroup.element.addClass('button-group');
         }
         this.osdViewer.navigator.element.style.marginBottom = "50px";
+    }
+
+    private loadKrpanoViewer(): void{
+        if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
+            this.isKrpanoAsset = true
+            krpano.embedpano({ 
+                xml: this.asset.viewerData.panorama_xml ,  
+                target: "pano-" + this.index, 
+                onready: (viewer) => {
+                    // See if there was an unreported error during final load
+                    setTimeout(() => {
+                        let content = viewer.innerHTML ? viewer.innerHTML : ''
+                        // Workaround for detecting load failure
+                        if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
+                            this.mediaLoadingFailed = true
+                        }
+                    }, 500)
+                },
+                onerror: (err) => {
+                    // This handler does not fire for "Fatal Error" when loading XML
+                    console.log(err)
+                },
+            })
+        }
+        else{ // If the media resolver info is not available then fallback to image viewer
+            this.loadIIIF()
+        }
     }
 
     private requestFullScreen(el: any): void {
@@ -274,25 +338,43 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * Setup the embedded Kaltura player
      */
     private loadKaltura(): void {
+        console.log("Load Kaltura")
         let targetId = 'kalturaIframe-' + this.index;
-
-        // // We gotta always say it's type 24, the type id for Kaltura!
-        // this._assets.getFpxInfo(this.asset.id, 24)
-        //     .then(data => {
-        //         console.log(data);
-        //         this.kalturaUrl = data['imageUrl'];
-        //         if (this._auth.getEnv() == 'test') {
-        //             this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
-        //         }
-        //         document.getElementById(targetId).setAttribute('src', this.kalturaUrl);
-
-        //         this.isKalturaAsset = true;
-        //         this.isOpenSeaDragonAsset = false;
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     });
+        if (this.asset.kalturaUrl) {
+            document.getElementById(targetId).setAttribute('src', this.asset.kalturaUrl);
+            this.mediaLoadingFailed = false
+            this.isKalturaAsset = true
+            this.isOpenSeaDragonAsset = false
+        }
     };
+
+    /**
+     * Generate Thumbnail URL
+     */
+    public makeThumbUrl(imagePath: string, size ?: number): string {
+        if (imagePath) {
+            if (size) {
+                imagePath = imagePath.replace(/(size)[0-4]/g, 'size' + size);
+            }
+            // Ensure relative
+            if (imagePath.indexOf('artstor.org') > -1) {
+                imagePath = imagePath.substring(imagePath.indexOf('artstor.org') + 12);
+            }
+
+            if (imagePath[0] != '/') {
+                imagePath = '/' + imagePath;
+            }
+
+            if (imagePath.indexOf('thumb') < 0) {
+                imagePath = '/thumb' + imagePath;
+            }
+        } else {
+            imagePath = '';
+        }
+
+        // Ceanup
+        return '//mdxstage.artstor.org' + imagePath;
+    }
 
     // Keep: We will want to dynamically load the Kaltura player
     // private getAndLoadKalturaId(data): void {

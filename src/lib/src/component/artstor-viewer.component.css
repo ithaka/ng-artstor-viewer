@@ -1,28 +1,38 @@
-$assetViewerPad: 20px;
-$viewerMinHeight: 90vh;
-$viewerOldBrowserMinHeight: 600px;
-$viewerMobileHeight: 50vh;
+/*20px: 20px;
+90vh: 90vh;
+600px: 600px;
+50vh: 50vh;
 
-$metadataBg: #f1f8f1;
+#f1f8f1: #f1f8f1;
 
 // Breakpoints
 $xsphone: 320px;
 $phone: 576px;
 $tablet: 768px;
-$desktop: 992px;
+$desktop: 992px;*/
+
+.hidden {
+    display: none;
+    pointer-events: none;
+}
+
+.mwEmbedKalturaIframe {
+      min-height: 600px !important;
+}
+
 
 .asset-viewer {
     text-align: center;
-    padding: 0; //$assetViewerPad;
+    padding: 0;
     z-index: 0;
     position: relative;
-    min-height: $viewerOldBrowserMinHeight;
-    min-height: $viewerMinHeight;
+    min-height: 600px;
+    min-height: 90vh;
     overflow: hidden;
 
-    @media(max-width: $phone) {
-        height: $viewerMobileHeight;
-        min-height: $viewerMobileHeight;
+    /*@media(max-width: $phone) {
+        height: 50vh;
+        min-height: 50vh;
 
         .asset-viewer__buttons {
             opacity: 1;
@@ -33,52 +43,52 @@ $desktop: 992px;
         .asset-viewer__buttons {
             opacity: 1;
         }
-    }
+    }*/
 }
 
 .asset-viewer__buttons {
     opacity: 0;
     transition: opacity 0.2s linear;
     position: absolute;
-    top: $assetViewerPad;
-    left: $assetViewerPad;
+    top: 20px;
+    left: 20px;
     z-index: 1000;
     padding: 10px;
 
-    @media(max-width: $phone) {
+    /*@media(max-width: $phone) {
         top: calc(100% - 40px);
         left: 50%;
         transform: translateX(-50%);
-    }
+    }*/
 }
 
 .video-player {
-    min-height: $viewerOldBrowserMinHeight;
-    min-height: $viewerMinHeight;
+    min-height: 600px;
+    min-height: 90vh;
 
-    @media(max-width: $phone) {
-        height: $viewerMobileHeight;
-        min-height: $viewerMobileHeight;
+    /*@media(max-width: $phone) {
+        height: 50vh;
+        min-height: 50vh;
     }
 
     & iframe {
         min-width:100%;
-        min-height: $viewerOldBrowserMinHeight;
-        min-height: $viewerMinHeight;
-    }
+        min-height: 600px;
+        min-height: 90vh;
+    }*/
 }
 
 .osd-wrap {
     position: relative;
-    height: $viewerOldBrowserMinHeight;
-    height: $viewerMinHeight;
+    height: 600px;
+    height: 90vh;
     width: 100%;
-    min-height: $viewerMinHeight;
+    min-height: 90vh;
 
-    @media(max-width: $phone) {
-        height: $viewerMobileHeight;
-        min-height: $viewerMobileHeight;
-    }
+    /*@media(max-width: $phone) {
+        height: 50vh;
+        min-height: 50vh;
+    }*/
 }
 
 .asset-viewer.fullscreen {
@@ -87,7 +97,7 @@ $desktop: 992px;
     z-index: 1;
     padding: 0px;
 
-    & .item  {
+    /*& .item  {
         position: absolute !important;
         width: 100%;
         height: 100%;
@@ -98,7 +108,7 @@ $desktop: 992px;
         &.asset-viewer-#{ $n } {
             width: 100%/$n;
         }
-    }
+    }*/
 }
 
 .item.item--thumbnail,
@@ -117,7 +127,7 @@ $desktop: 992px;
 
 .fullscreen-metadata {
     position: absolute;
-    background: $metadataBg;
+    background: #f1f8f1;
     left: 0px;
     bottom: 0px;
     z-index: 1;
@@ -128,7 +138,7 @@ $desktop: 992px;
     transition: transform 0.2s linear;
     transform: translateY(0px);
 
-    &.slideAway {
+    /*&.slideAway {
         transform: translateY(100%);
     }
 
@@ -182,7 +192,7 @@ $desktop: 992px;
         font-size: 12px;
         cursor: pointer;
         border-bottom: 1px dotted #373a3c;
-    }
+    }*/
 
 }
 

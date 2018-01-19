@@ -20,6 +20,7 @@ export class Asset {
   creator: string;
   date: string;
   imgURL: string;
+  kalturaUrl: string;
   fileExt: string;
   downloadLink: string;
   downloadName: string
@@ -168,15 +169,15 @@ export class Asset {
       for(var i = 0; i < this.metaDataArray.length; i++){
           if(this.metaDataArray[i].fieldName == 'Creator'){
               this.creator = this.metaDataArray[i].fieldValue;
-              document.querySelector('meta[name="DC.creator"]').setAttribute('content', this.creator);
+            //   document.querySelector('meta[name="DC.creator"]').setAttribute('content', this.creator);
           }
-          else if(this.metaDataArray[i].fieldName == 'Date'){
-              this.date = this.metaDataArray[i].fieldValue;
-              document.querySelector('meta[name="DCTERMS.issued"]').setAttribute('content', this.date);
-          }
-          else if(this.metaDataArray[i].fieldName == 'Description'){
-              document.querySelector('meta[name="DC.description"]').setAttribute('content', this.metaDataArray[i].fieldValue);
-          }
+        //   else if(this.metaDataArray[i].fieldName == 'Date'){
+        //       this.date = this.metaDataArray[i].fieldValue;
+        //       document.querySelector('meta[name="DCTERMS.issued"]').setAttribute('content', this.date);
+        //   }
+        //   else if(this.metaDataArray[i].fieldName == 'Description'){
+        //       document.querySelector('meta[name="DC.description"]').setAttribute('content', this.metaDataArray[i].fieldValue);
+        //   }
       }
   }
 
@@ -228,10 +229,10 @@ export class Asset {
     // - Download link is differs based on typeIds
     let imageServer = data.imageServer || 'http://imgserver.artstor.net/'
     if (this.typeId === 20 || this.typeId === 21 || this.typeId === 22 || this.typeId === 23) { //all of the typeIds for documents
-        this.downloadLink = [this._auth.getMediaUrl(), this.id, this.typeId].join("/");
+        this.downloadLink = ['//stage.artstor.org/media', this.id, this.typeId].join("/");
     } else if (imageServer && data.image_url) { //this is a general fallback, but should work specifically for images and video thumbnails
         let url = imageServer + data.image_url + "?cell=" + downloadSize + "&rgnn=0,0,1,1&cvt=JPEG";
-        this.downloadLink = this._auth.getHostname() + "/api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
+        this.downloadLink = "//stage.artstor.org/api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
     }
 
     // Set the media resolver info for QTVR assets
@@ -246,8 +247,24 @@ export class Asset {
     } else {
         imgPath = '/' + data['image_url'].substring(0, data['image_url'].lastIndexOf('.fpx') + 4)
     }
-    this.tileSource = this._auth.getIIIFUrl() + encodeURIComponent(imgPath) + '/info.json'
-    this.dataLoadedSource.next(true);
+    this.tileSource = '//tsprod.artstor.org/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+
+    // If Kaltura, we need more information!
+    if (this.typeName() == 'kaltura') {
+        this.getFpxInfo(this.id, 24)
+            .then(data => {
+                this.kalturaUrl = data['imageUrl'];
+                // if (this._auth.getEnv() == 'test') {
+                    // this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
+                // }
+                this.dataLoadedSource.next(true);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    } else {
+        this.dataLoadedSource.next(true);
+    }
   }
 
   /**
@@ -271,12 +288,20 @@ export class Asset {
   }
 
    public getMetadata(assetId: string, groupId?: string): Observable<any> {
-      let url = '//library.artstor.org/v1/metadata?object_ids=' + assetId
+      let url = '//stage.artstor.org/api/v1/metadata?object_ids=' + assetId
       if (groupId){
           // Groups service modifies certain access rights for shared assets
-          url = '//library.artstor.org/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
+          url = '//stage.artstor.org/api/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
       }
       return this.http
           .get( url, this.defaultOptions)
+  }
+
+  public getFpxInfo(objectId: string, objectTypeId: number): Promise<any> {
+        let requestUrl = '//stage.artstor.org/api/imagefpx/' + objectId + '/' + objectTypeId;
+
+        return this.http
+            .get(requestUrl, this.defaultOptions)
+            .toPromise()
   }
 }
