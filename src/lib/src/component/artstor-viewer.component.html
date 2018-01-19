@@ -1,8 +1,4 @@
-<!-- Load krpano JS file for Qtvr viewer -->
-<script src="/assets/js/krpano.js"></script>
-
 <div class="asset-viewer" [class.fullscreen]="isFullscreen" (contextmenu)="disableContextMenu($event)">
-  id: {{ assetId }}
   <!-- IIIF Image Viewer-->
   <div [class.hidden]="!isOpenSeaDragonAsset || mediaLoadingFailed">
     <div class="more-results overlay-wrap--center" id="loader-wrapper" *ngIf="!openSeaDragonReady"><i class="icon-asterisk icon-spin icon-large"></i></div>
