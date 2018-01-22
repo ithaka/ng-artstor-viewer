@@ -11,11 +11,12 @@ import { Asset } from "../asset.interface"
 declare var ActiveXObject: any
 declare var embedpano: any
 
-enum viewerState {
-  inactive, 
-  loading,
-  playing,
-  recording
+enum viewState {
+  loading, // 0
+  openSeaReady, // 1
+  kalturaReady, // 2 
+  krpanoReady, // 3
+  thumbnailFallback // 4
 }
 
 @Component({
@@ -26,6 +27,7 @@ enum viewerState {
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
+    // Required Input
     private _assetId: string = ''
     @Input() set assetId(value: string) {
         if (value != this._assetId) {
@@ -38,35 +40,33 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         return this._assetId
     }
 
-    private asset: Asset
-    private assetSub: Subscription
+    // Optional Inputs
+    @Input() index: number
+    @Input() assetCompareCount: number
+    @Input() assetGroupCount: number
+    @Input() assetNumber: number
+    @Input() assets: Asset[]
+    @Input() prevAssetResults: any
+    @Input() isFullscreen: boolean
+    @Input() showCaption: boolean
+    @Input() quizMode: boolean
+    @Input() testEnv: boolean
 
-    private index: number = 0
-    private assetCompareCount: number
-    private assetGroupCount: number
-    private assetNumber: number
-    private assets: Asset[]
-    private prevAssetResults: any
-    private isFullscreen: boolean
-    private showCaption: boolean
-    private quizMode: boolean
-
+    // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
     @Output() nextPage = new EventEmitter()
     @Output() prevPage = new EventEmitter()
     @Output() removeAsset = new EventEmitter()
     @Output() assetDrawer = new EventEmitter()
+    // Emits fully formed asset object
+    @Output() assetMetadata = new EventEmitter()
 
-    private isLoading: boolean = true
-    // private isFullscreen: boolean = false
-    private openSeaDragonReady: boolean = false
-    private isOpenSeaDragonAsset: boolean = false
-    private isKrpanoAsset: boolean = false
-    private isKalturaAsset: boolean = false
-    private mediaLoadingFailed: boolean = false
+    private asset: Asset
+    private assetSub: Subscription
+    private state: viewState = viewState.loading
     private removableAsset: boolean = false
     private subscriptions: Subscription[] = []
-    private fallbackFailed: boolean = false
+    // private fallbackFailed: boolean = false
     private tileSource: string
     private lastZoomValue: number
     // Thumbanil Size is decremented if load fails (see thumbnailError)
@@ -83,7 +83,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // private hostElement: ElementRef,
         private _http: HttpClient
     ) { 
-
+        if(!this.index) {
+            this.index = 0
+        }
     }
 
     ngOnInit() {
@@ -118,8 +120,19 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
+    private getUrl(): string {
+        return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    }
+
     private loadAssetById(): void {
-        this.asset = new Asset(this.assetId, this._http)
+        // Destroy previous viewers
+        if (this.osdViewer) {
+            this.osdViewer.destroy()
+        }
+        // Set viewer to "loading"
+        this.state = viewState.loading
+        // Construct new/replacement asset
+        this.asset = new Asset(this.assetId, this._http, this.testEnv)
         
         if (this.assetSub) {
             this.assetSub.unsubscribe()
@@ -127,6 +140,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
         this.assetSub = this.asset.isDataLoaded.subscribe(loaded => {
             if (loaded) {
+                this.assetMetadata.emit(this.asset)
                 this.loadViewer()
             }
         })
@@ -137,7 +151,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         switch (this.asset.typeName()) {
             default:
                 // Display thumbnail
-                this.mediaLoadingFailed = true;
+                this.state = viewState.thumbnailFallback
             case 'image':
                 // Image, try IIF
                 this.loadIIIF();
@@ -166,7 +180,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.tileSource = this.asset.tileSource
             this.loadOpenSea()
         } else {
-            this.mediaLoadingFailed = true
+            this.state = viewState.thumbnailFallback
         }
     }
 
@@ -175,14 +189,14 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
-        console.log("Load open sea")
-        this.isOpenSeaDragonAsset = true;
+        // Set state to IIIF/OpenSeaDragon
+        this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
         let id =  this.asset.id + '-' + this.index;
         this.osdViewer = new OpenSeadragon({
             id: 'osd-' + id,
             // prefix for Icon Images
-            // prefixUrl: 'assets/img/osd/',
+            prefixUrl: this.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
             gestureSettingsMouse: {
                 scrollToZoom: true,
@@ -204,7 +218,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // ---- Use handler in case other error crops up
         this.osdViewer.addOnceHandler('open-failed', (e: Event) => {
             console.error("OSD Opening source failed:",e)
-            this.mediaLoadingFailed = true;
+            this.state = viewState.thumbnailFallback
             this.osdViewer.destroy();
         });
 
@@ -224,13 +238,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
         this.osdViewer.addOnceHandler('tile-load-failed', (e: Event) => {
             console.warn("OSD Loading tiles failed:", e)
-            this.mediaLoadingFailed = true;
+            this.state = viewState.thumbnailFallback
             this.osdViewer.destroy();
         });
 
         this.osdViewer.addOnceHandler('ready', () => {
             console.info("Tiles are ready");
-            this.openSeaDragonReady = true;
+            this.state = viewState.openSeaReady
         });
 
         // this.osdViewer.addHangler('open', (event) => {
@@ -248,7 +262,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
-            this.isKrpanoAsset = true
+            this.state = viewState.krpanoReady
             // krpano.embedpano({ 
             //     xml: this.asset.viewerData.panorama_xml ,  
             //     target: "pano-" + this.index, 
@@ -342,9 +356,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         let targetId = 'kalturaIframe-' + this.index;
         if (this.asset.kalturaUrl) {
             document.getElementById(targetId).setAttribute('src', this.asset.kalturaUrl);
-            this.mediaLoadingFailed = false
-            this.isKalturaAsset = true
-            this.isOpenSeaDragonAsset = false
+            this.state = viewState.openSeaReady
+            // this.isOpenSeaDragonAsset = false
         }
     };
 
@@ -373,7 +386,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         }
 
         // Ceanup
-        return '//mdxstage.artstor.org' + imagePath;
+        return (this.testEnv ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + imagePath;
     }
 
     // Keep: We will want to dynamically load the Kaltura player
@@ -387,7 +400,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
         //     if (kalturaId && kalturaId.length > 0) {
         //         this.isKalturaAsset = true;
-        //         this.isOpenSeaDragonAsset = false;
+                // this.isOpenSeaDragonAsset = false;
 
         //         kWidget.embed({
         //             'targetId': targetId,

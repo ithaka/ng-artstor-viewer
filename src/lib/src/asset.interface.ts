@@ -7,6 +7,7 @@ export class Asset {
   private _assets: any;
   private _auth: any;
   private http: HttpClient
+  private testEnv: boolean
 
   private header = new HttpHeaders().set('Content-Type', 'application/json');
   private defaultOptions = { headers: this.header, withCredentials: true };
@@ -98,14 +99,19 @@ export class Asset {
         "artworktype"
     ];
 
-  constructor(asset_id: string, http: HttpClient, groupId ?: string) {
+  constructor(asset_id: string, http: HttpClient, testEnv? : boolean, groupId ?: string) {
     this.id = this.artstorid = asset_id
     this.groupId = groupId
     this._assets = {}
     this._auth = {}
+    this.testEnv = testEnv
     this.http = http
 
     this.loadMediaMetaData();
+  }
+
+  private getUrl(): string {
+    return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
   }
 
   /**
@@ -229,10 +235,10 @@ export class Asset {
     // - Download link is differs based on typeIds
     let imageServer = data.imageServer || 'http://imgserver.artstor.net/'
     if (this.typeId === 20 || this.typeId === 21 || this.typeId === 22 || this.typeId === 23) { //all of the typeIds for documents
-        this.downloadLink = ['//stage.artstor.org/media', this.id, this.typeId].join("/");
+        this.downloadLink = [this.getUrl() + 'media', this.id, this.typeId].join("/");
     } else if (imageServer && data.image_url) { //this is a general fallback, but should work specifically for images and video thumbnails
         let url = imageServer + data.image_url + "?cell=" + downloadSize + "&rgnn=0,0,1,1&cvt=JPEG";
-        this.downloadLink = "//stage.artstor.org/api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
+        this.downloadLink = this.getUrl() + "api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
     }
 
     // Set the media resolver info for QTVR assets
@@ -247,7 +253,7 @@ export class Asset {
     } else {
         imgPath = '/' + data['image_url'].substring(0, data['image_url'].lastIndexOf('.fpx') + 4)
     }
-    this.tileSource = '//tsprod.artstor.org/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+    this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
 
     // If Kaltura, we need more information!
     if (this.typeName() == 'kaltura') {
@@ -288,17 +294,17 @@ export class Asset {
   }
 
    public getMetadata(assetId: string, groupId?: string): Observable<any> {
-      let url = '//stage.artstor.org/api/v1/metadata?object_ids=' + assetId
+      let url = this.getUrl() + 'api/v1/metadata?object_ids=' + assetId
       if (groupId){
           // Groups service modifies certain access rights for shared assets
-          url = '//stage.artstor.org/api/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
+          url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
       }
       return this.http
           .get( url, this.defaultOptions)
   }
 
   public getFpxInfo(objectId: string, objectTypeId: number): Promise<any> {
-        let requestUrl = '//stage.artstor.org/api/imagefpx/' + objectId + '/' + objectTypeId;
+        let requestUrl = this.getUrl() + 'api/imagefpx/' + objectId + '/' + objectTypeId;
 
         return this.http
             .get(requestUrl, this.defaultOptions)
