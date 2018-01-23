@@ -12,4 +12,8 @@ export class AppComponent {
   constructor(libService: ArtstorViewer) {
     // this.meaning = libService.getMeaning();
   }
+
+  handleLoadedMetadata(assetData) {
+    console.log(assetData)
+  }
 }

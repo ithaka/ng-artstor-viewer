@@ -102,7 +102,6 @@ export class Asset {
     this.groupId = groupId
     this.testEnv = testEnv
     this.http = http
-
     this.loadMediaMetaData();
   }
 

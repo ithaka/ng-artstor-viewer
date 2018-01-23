@@ -4,4 +4,4 @@
 <button (click)="currentId = 'SS7730820_7730820_10564281'">President Roger Drake Interview (Kaltura Audio)</button>
 <button (click)="currentId = 'SS34216_34216_38536370'">Converted QTVR (Pano)</button>
 <button (click)="currentId = 'SS34216_34216_38866586'">Doc (Thumbnail)</button>
-<artstor-viewer [assetId]="currentId" [testEnv]="true"></artstor-viewer>
+<artstor-viewer [assetId]="currentId" [testEnv]="true" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
