@@ -4,8 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs/Rx'
 // import { AssetService, AuthService } from './../shared';
 
 export class Asset {
-  private _assets: any;
-  private _auth: any;
   private http: HttpClient
   private testEnv: boolean
 
@@ -102,8 +100,6 @@ export class Asset {
   constructor(asset_id: string, http: HttpClient, testEnv? : boolean, groupId ?: string) {
     this.id = this.artstorid = asset_id
     this.groupId = groupId
-    this._assets = {}
-    this._auth = {}
     this.testEnv = testEnv
     this.http = http
 
@@ -285,10 +281,6 @@ export class Asset {
             this.setAssetProperties(data)
         }, (err) => {
             // If it's an access denied error, throw that to the subscribers
-            if (err.status === 403) {
-                this._assets.unAuthorizedAsset.next( true )
-            }
-
             this.dataLoadedSource.error( err )
         });
   }

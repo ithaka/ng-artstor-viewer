@@ -138,12 +138,16 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.assetSub.unsubscribe()
         }
 
-        this.assetSub = this.asset.isDataLoaded.subscribe(loaded => {
-            if (loaded) {
-                this.assetMetadata.emit(this.asset)
-                this.loadViewer()
-            }
-        })
+        this.assetSub = this.asset.isDataLoaded.subscribe(
+            loaded => {
+                if (loaded) {
+                    this.assetMetadata.emit(this.asset)
+                    this.loadViewer()
+                }
+            },
+            error => {
+                this.assetMetadata.emit({error: error})
+            })
     }
 
     private loadViewer(): void {
