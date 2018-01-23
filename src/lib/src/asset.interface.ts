@@ -66,7 +66,7 @@ export class Asset {
       8: 'people',
       9: 'repository',
       10: 'image',
-      11: 'qtvr',
+      11: 'panorama',
       12: 'audio',
       13: '3d',
       21: 'powerpoint',
@@ -236,7 +236,7 @@ export class Asset {
         this.downloadLink = this.getUrl() + "api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
     }
 
-    // Set the media resolver info for QTVR assets
+    // Set the media resolver info for panorama assets
     if( data.viewer_data ){
         this.viewerData = data.viewer_data
     }

@@ -168,7 +168,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                 // Kaltura media
                 this.loadKaltura();
                 break;
-            case 'qtvr':
+            case 'panorama':
                 this.loadKrpanoViewer();
                 break;
         }

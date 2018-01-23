@@ -1,6 +1,6 @@
 {
   "name": "artstor-viewer",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Angular wrapper for the Artstor Universal Viewer",
   "main": "./bundles/artstor-viewer.umd.js",
   "module": "./artstor-viewer.es5.js",
