@@ -7,7 +7,7 @@
 
 // Breakpoints
 $xsphone: 320px;
-$phone: 576px;
+576px: 576px;
 $tablet: 768px;
 $desktop: 992px;*/
 
@@ -29,21 +29,21 @@ $desktop: 992px;*/
     min-height: 600px;
     min-height: 90vh;
     overflow: hidden;
+}
 
-    /*@media(max-width: $phone) {
+.asset-viewer:hover .asset-viewer__buttons  {
+    opacity: 1;
+}
+
+@media(max-width: 576px) {
+    .asset-viewer {
         height: 50vh;
         min-height: 50vh;
-
-        .asset-viewer__buttons {
-            opacity: 1;
-        }
     }
 
-    &:hover {
-        .asset-viewer__buttons {
-            opacity: 1;
-        }
-    }*/
+    .asset-viewer .asset-viewer__buttons {
+        opacity: 1;
+    }
 }
 
 .asset-viewer__buttons {
@@ -54,28 +54,29 @@ $desktop: 992px;*/
     left: 20px;
     z-index: 1000;
     padding: 10px;
-
-    /*@media(max-width: $phone) {
+}
+@media(max-width: 576px) {
+    .asset-viewer__buttons {
         top: calc(100% - 40px);
         left: 50%;
         transform: translateX(-50%);
-    }*/
+    }
 }
 
 .video-player {
     min-height: 600px;
     min-height: 90vh;
-
-    /*@media(max-width: $phone) {
+}
+@media(max-width: 576px) {
+    .video-player {
         height: 50vh;
         min-height: 50vh;
     }
-
-    & iframe {
-        min-width:100%;
-        min-height: 600px;
-        min-height: 90vh;
-    }*/
+}
+.video-player iframe {
+    min-width:100%;
+    min-height: 600px;
+    min-height: 90vh;
 }
 
 .osd-wrap {
@@ -84,11 +85,12 @@ $desktop: 992px;*/
     height: 90vh;
     width: 100%;
     min-height: 90vh;
-
-    /*@media(max-width: $phone) {
+}
+@media(max-width: 576px) {
+    .osd-wrap {
         height: 50vh;
         min-height: 50vh;
-    }*/
+    }
 }
 
 .asset-viewer.fullscreen {
@@ -96,19 +98,72 @@ $desktop: 992px;*/
     width: 100%;
     z-index: 1;
     padding: 0px;
-
-    /*& .item  {
-        position: absolute !important;
-        width: 100%;
-        height: 100%;
-        min-height: 100% !important;
-    }
-
-    @for $n from 0 through 20 {
-        &.asset-viewer-#{ $n } {
-            width: 100%/$n;
-        }
-    }*/
+}
+.asset-viewer.fullscreen .item  {
+    position: absolute !important;
+    width: 100%;
+    height: 100%;
+    min-height: 100% !important;
+}
+.asset-viewer-1 {
+    width: 100%;
+}
+.asset-viewer-2 {
+    width: 50%;
+}
+.asset-viewer-3 {
+    width: 33.3%;
+}
+.asset-viewer-4 {
+    width: 25%;
+}
+.asset-viewer-5 {
+    width: 20%;
+}
+.asset-viewer-6 {
+    width: 16.66%;
+}
+.asset-viewer-7 {
+    width: 14.285%;
+}
+.asset-viewer-8 {
+    width: 12.5%;
+}
+.asset-viewer-9 {
+    width: 11.11%;
+}
+.asset-viewer-10 {
+    width: 10%;
+}
+.asset-viewer-11 {
+    width: 9.09%;
+}
+.asset-viewer-12 {
+    width: 8.33%;
+}
+.asset-viewer-13 {
+    width: 7.69%;
+}
+.asset-viewer-14 {
+    width: 7.14%;
+}
+.asset-viewer-15 {
+    width: 6.66%;
+}
+.asset-viewer-16 {
+    width: 6.25%;
+}
+.asset-viewer-17 {
+    width: 5.88%;
+}
+.asset-viewer-18 {
+    width: 5.55%;
+}
+.asset-viewer-19 {
+    width: 5.26%;
+}
+.asset-viewer-20 {
+    width: 5%;
 }
 
 .item.item--thumbnail,
@@ -137,17 +192,19 @@ $desktop: 992px;*/
     padding: 20px;
     transition: transform 0.2s linear;
     transform: translateY(0px);
+}
 
-    /*&.slideAway {
+
+    .fullscreen-metadata.slideAway {
         transform: translateY(100%);
     }
 
-    & i{
+    .fullscreen-metadata i{
         vertical-align: top;
         margin: 3px;
         cursor: pointer;
     }
-    & .title{
+    .fullscreen-metadata .title{
         font-family: 'Lyon Display Web', Georgia, Times;
         font-size: 18px;
         display: inline-block;
@@ -158,7 +215,7 @@ $desktop: 992px;*/
         text-overflow: ellipsis;
         vertical-align: top;
     }
-    & .page-tooltip{
+    .fullscreen-metadata .page-tooltip{
         font-weight: normal;
         font-size: 10px;
         min-width: 120px;
@@ -182,19 +239,17 @@ $desktop: 992px;*/
         -moz-transition: opacity linear 0.3s;
         transition: opacity linear 0.3s;
     }
-    &:hover .page-tooltip{
+    .fullscreen-metadata:hover .page-tooltip{
         opacity: 1;
     }
 
-    & .caption-link{
+    .fullscreen-metadata .caption-link{
         display: inline-block;
         float: left;
         font-size: 12px;
         cursor: pointer;
         border-bottom: 1px dotted #373a3c;
-    }*/
-
-}
+    }
 
 .caption-cntnr{
     display: block;
