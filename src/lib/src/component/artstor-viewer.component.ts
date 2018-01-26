@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription'
 import { HttpClient } from '@angular/common/http'
 
 import * as OpenSeadragon from 'openseadragon';
-// import * as krpano from '../viewers/krpano.js';
+import '../viewers/krpano.js';
 // Internal Dependencies
 import { Asset } from "../asset.interface"
 
@@ -266,25 +266,40 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
-            this.state = viewState.krpanoReady
-            // krpano.embedpano({ 
-            //     xml: this.asset.viewerData.panorama_xml ,  
-            //     target: "pano-" + this.index, 
-            //     onready: (viewer) => {
-            //         // See if there was an unreported error during final load
-            //         setTimeout(() => {
-            //             let content = viewer.innerHTML ? viewer.innerHTML : ''
-            //             // Workaround for detecting load failure
-            //             if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
-            //                 this.mediaLoadingFailed = true
-            //             }
-            //         }, 500)
-            //     },
-            //     onerror: (err) => {
-            //         // This handler does not fire for "Fatal Error" when loading XML
-            //         console.log(err)
-            //     },
-            // })
+            // Check if pano xml is available before loading pano
+            this._http.get(this.asset.viewerData.panorama_xml)
+                .take(1)
+                .subscribe(
+                    data => {
+                        // Pano xml is accessible
+                        this.state = viewState.krpanoReady
+                        embedpano({ 
+                            html5: "always",
+                            localfallback: "error",
+                            xml: this.asset.viewerData.panorama_xml,  
+                            target: "pano-" + this.index, 
+                            onready: (viewer) => {
+                                // See if there was an unreported error during final load
+                                setTimeout(() => {
+                                    let content = viewer.innerHTML ? viewer.innerHTML : ''
+                                    // Workaround for detecting load failure
+                                    if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
+                                        this.state = viewState.thumbnailFallback
+                                    }
+                                }, 500)
+                            },
+                            onerror: (err) => {
+                                // This handler does not fire for "Fatal Error" when loading XML
+                                console.log(err)
+                                this.state = viewState.thumbnailFallback
+                            },
+                        })
+                    },
+                    error => {
+                        // Pano xml is not accessible
+                        this.state = viewState.thumbnailFallback
+                    }
+                )
         }
         else{ // If the media resolver info is not available then fallback to image viewer
             this.loadIIIF()
