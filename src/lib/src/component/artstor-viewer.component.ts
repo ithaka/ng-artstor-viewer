@@ -298,7 +298,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                         })
                     },
                     error => {
-                        console.warn("Pano XML was not accessible")
+                        console.warn("Pano XML was not accessible", error)
                         // Pano xml is not accessible
                         this.loadIIIF()
                     }
