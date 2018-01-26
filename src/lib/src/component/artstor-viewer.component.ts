@@ -266,6 +266,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
+            console.log("Test load Pano metadata")
             // Check if pano xml is available before loading pano
             this._http.get(this.asset.viewerData.panorama_xml)
                 .take(1)
@@ -279,6 +280,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                             xml: this.asset.viewerData.panorama_xml,  
                             target: "pano-" + this.index, 
                             onready: (viewer) => {
+                                console.log("KR Pano has loaded", viewer)
                                 // See if there was an unreported error during final load
                                 setTimeout(() => {
                                     let content = viewer.innerHTML ? viewer.innerHTML : ''
@@ -296,8 +298,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                         })
                     },
                     error => {
+                        console.warn("Pano XML was not accessible")
                         // Pano xml is not accessible
-                        this.state = viewState.thumbnailFallback
+                        this.loadIIIF()
                     }
                 )
         }

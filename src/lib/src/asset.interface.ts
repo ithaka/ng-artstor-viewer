@@ -255,9 +255,9 @@ export class Asset {
         this.getFpxInfo(this.id, 24)
             .then(data => {
                 this.kalturaUrl = data['imageUrl'];
-                // if (this._auth.getEnv() == 'test') {
-                    // this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
-                // }
+                if (this.testEnv) {
+                    this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
+                }
                 this.dataLoadedSource.next(true);
             })
             .catch(err => {
