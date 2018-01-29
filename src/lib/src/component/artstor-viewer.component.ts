@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import * as OpenSeadragon from 'openseadragon';
 import '../viewers/krpano.js';
@@ -16,7 +16,8 @@ enum viewState {
   openSeaReady, // 1
   kalturaReady, // 2 
   krpanoReady, // 3
-  thumbnailFallback // 4
+  thumbnailFallback, // 4
+  audioFallback //5
 }
 
 @Component({
@@ -159,6 +160,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             case 'audio':
                 // Kaltura media
                 this.loadKaltura();
+                // this.state = viewState.audioFallback
                 break;
             case 'kaltura':
                 // Kaltura media
@@ -262,9 +264,10 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
-            console.log("Test load Pano metadata")
+            console.log("Test access to Pano metadata")
+            let headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
             // Check if pano xml is available before loading pano
-            this._http.get(this.asset.viewerData.panorama_xml)
+            this._http.get(this.asset.viewerData.panorama_xml, { headers: headers })
                 .take(1)
                 .subscribe(
                     data => {
@@ -272,13 +275,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                     },
                     error => {
                         // // We don't care about parsing, just network access
-                        // if (error && error.status == 200) {
-                        //     this.embedKrpano()
-                        // } else {
+                        if (error && error.status == 200) {
+                            this.embedKrpano()
+                        } else {
                             console.warn("Pano XML was not accessible", error)
                             // Pano xml is not accessible, fallback to image
                             this.loadIIIF()
-                        // }
+                        }
                     }
                 )
         }
@@ -384,6 +387,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         if (this.asset.kalturaUrl) {
             document.getElementById(targetId).setAttribute('src', this.asset.kalturaUrl);
             this.state = viewState.kalturaReady
+        } else {
+            this.state = viewState.thumbnailFallback
         }
     };
 

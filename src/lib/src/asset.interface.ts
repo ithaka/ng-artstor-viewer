@@ -251,7 +251,7 @@ export class Asset {
     this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
 
     // If Kaltura, we need more information!
-    if (this.typeName() == 'kaltura') {
+    if (this.typeName() == 'kaltura' || this.typeName() == 'audio' || this.typeName() == 'video') {
         this.getFpxInfo(this.id, 24)
             .then(data => {
                 this.kalturaUrl = data['imageUrl'];

@@ -9,11 +9,11 @@
     <iframe id="{{ 'kalturaIframe-' + index }}" frameborder="0"></iframe>
   </div>
   <!-- Audio Player-->
-  <div *ngIf="asset.typeName() == 'audio'">
-    <audio class="item video-player" id="audio-{{ asset.id + '-' + index }}" controls style="display:none;">
+  <!--<div *ngIf="state == 5">
+    <audio class="item video-player" id="audio-{{ asset.id + '-' + index }}" controls>
       <source [attr.src]="asset.downloadLink" type="audio/MPEG">{{ 'audio_error' }}
     </audio>
-  </div>
+  </div>-->
   <!--panorama Krpano viewer-->
   <div class="krpano-viewer osd-wrap" [class.hidden]="state != 3">
     <div class="pano" id="pano-{{ index }}"></div>
