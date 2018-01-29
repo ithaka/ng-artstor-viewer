@@ -272,41 +272,50 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                 .take(1)
                 .subscribe(
                     data => {
-                        // Pano xml is accessible
-                        this.state = viewState.krpanoReady
-                        embedpano({ 
-                            html5: "always",
-                            localfallback: "error",
-                            xml: this.asset.viewerData.panorama_xml,  
-                            target: "pano-" + this.index, 
-                            onready: (viewer) => {
-                                console.log("KR Pano has loaded", viewer)
-                                // See if there was an unreported error during final load
-                                setTimeout(() => {
-                                    let content = viewer.innerHTML ? viewer.innerHTML : ''
-                                    // Workaround for detecting load failure
-                                    if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
-                                        this.state = viewState.thumbnailFallback
-                                    }
-                                }, 500)
-                            },
-                            onerror: (err) => {
-                                // This handler does not fire for "Fatal Error" when loading XML
-                                console.log(err)
-                                this.state = viewState.thumbnailFallback
-                            },
-                        })
+                       this.embedKrpano()
                     },
                     error => {
-                        console.warn("Pano XML was not accessible", error)
-                        // Pano xml is not accessible
-                        this.loadIIIF()
+                        // We don't care about parsing, just network access
+                        if (error && error.status == 200) {
+                            this.embedKrpano()
+                        } else {
+                            console.warn("Pano XML was not accessible", error)
+                            // Pano xml is not accessible
+                            this.loadIIIF()
+                        }
                     }
                 )
         }
         else{ // If the media resolver info is not available then fallback to image viewer
             this.loadIIIF()
         }
+    }
+
+    private embedKrpano() : void {
+         // Run if Pano xml is accessible
+        this.state = viewState.krpanoReady
+        embedpano({ 
+            html5: "always",
+            localfallback: "error",
+            xml: this.asset.viewerData.panorama_xml,  
+            target: "pano-" + this.index, 
+            onready: (viewer) => {
+                console.log("KR Pano has loaded", viewer)
+                // See if there was an unreported error during final load
+                setTimeout(() => {
+                    let content = viewer.innerHTML ? viewer.innerHTML : ''
+                    // Workaround for detecting load failure
+                    if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
+                        this.state = viewState.thumbnailFallback
+                    }
+                }, 500)
+            },
+            onerror: (err) => {
+                // This handler does not fire for "Fatal Error" when loading XML
+                console.log(err)
+                this.state = viewState.thumbnailFallback
+            },
+        })
     }
 
     private requestFullScreen(el: any): void {
