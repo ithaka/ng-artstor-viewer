@@ -241,8 +241,8 @@ export class Asset {
         this.viewerData = data.viewer_data
         // Point pano to prod
         if (this.viewerData && this.viewerData['panorama_xml']) {
-            this.viewerData['panorama_xml'].replace('stor.stage.artstor', 'stor.artstor')
-            this.viewerData['base_asset_url'].replace('stor.stage.artstor', 'stor.artstor')
+            this.viewerData['panorama_xml'] = this.viewerData['panorama_xml'].replace('stor.stage.artstor', 'stor.artstor')
+            this.viewerData['base_asset_url'] = this.viewerData['base_asset_url'].replace('stor.stage.artstor', 'stor.artstor')
         }
     }
 
