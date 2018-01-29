@@ -259,3 +259,8 @@ $desktop: 992px;*/
     background: rgba(255,255,255,0.95);
     width: 100%;
 }
+
+.pano {
+    width: 100%;
+    height: 100%;
+}
