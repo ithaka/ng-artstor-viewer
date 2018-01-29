@@ -238,7 +238,12 @@ export class Asset {
 
     // Set the media resolver info for panorama assets
     if( data.viewer_data ){
-        this.viewerData = data.viewer_data.replace('stor.stage.artstor', 'stor.artstor')
+        this.viewerData = data.viewer_data
+        // Point pano to prod
+        if (this.viewerData && this.viewerData['panorama_xml']) {
+            this.viewerData['panorama_xml'].replace('stor.stage.artstor', 'stor.artstor')
+            this.viewerData['base_asset_url'].replace('stor.stage.artstor', 'stor.artstor')
+        }
     }
 
     // Save the Tile Source for IIIF
