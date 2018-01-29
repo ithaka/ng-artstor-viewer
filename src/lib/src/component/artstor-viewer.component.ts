@@ -77,10 +77,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private osdViewer: any
 
     constructor(
-        // private _assets: AssetService,
-        // private _auth: AuthService,
-        // private _analytics: Angulartics2
-        // private hostElement: ElementRef,
         private _http: HttpClient
     ) { 
         if(!this.index) {
@@ -275,14 +271,14 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                        this.embedKrpano()
                     },
                     error => {
-                        // We don't care about parsing, just network access
-                        if (error && error.status == 200) {
-                            this.embedKrpano()
-                        } else {
+                        // // We don't care about parsing, just network access
+                        // if (error && error.status == 200) {
+                        //     this.embedKrpano()
+                        // } else {
                             console.warn("Pano XML was not accessible", error)
-                            // Pano xml is not accessible
+                            // Pano xml is not accessible, fallback to image
                             this.loadIIIF()
-                        }
+                        // }
                     }
                 )
         }
@@ -308,7 +304,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                     if (content.search('FATAL ERROR') >= 0 && content.search('loading failed') >= 0) {
                         this.state = viewState.thumbnailFallback
                     }
-                }, 500)
+                }, 1000)
             },
             onerror: (err) => {
                 // This handler does not fire for "Fatal Error" when loading XML
@@ -387,8 +383,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         let targetId = 'kalturaIframe-' + this.index;
         if (this.asset.kalturaUrl) {
             document.getElementById(targetId).setAttribute('src', this.asset.kalturaUrl);
-            this.state = viewState.openSeaReady
-            // this.isOpenSeaDragonAsset = false
+            this.state = viewState.kalturaReady
         }
     };
 

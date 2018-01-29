@@ -239,11 +239,6 @@ export class Asset {
     // Set the media resolver info for panorama assets
     if( data.viewer_data ){
         this.viewerData = data.viewer_data
-        // Point pano to prod
-        if (this.viewerData && this.viewerData['panorama_xml']) {
-            this.viewerData['panorama_xml'] = this.viewerData['panorama_xml'].replace('stor.stage.artstor', 'stor.artstor')
-            this.viewerData['base_asset_url'] = this.viewerData['base_asset_url'].replace('stor.stage.artstor', 'stor.artstor')
-        }
     }
 
     // Save the Tile Source for IIIF
@@ -260,9 +255,9 @@ export class Asset {
         this.getFpxInfo(this.id, 24)
             .then(data => {
                 this.kalturaUrl = data['imageUrl'];
-                // if (this.testEnv) {
-                //     this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
-                // }
+                if (this.testEnv) {
+                    this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
+                }
                 this.dataLoadedSource.next(true);
             })
             .catch(err => {
