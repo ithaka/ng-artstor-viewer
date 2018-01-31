@@ -42,6 +42,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     // Optional Inputs
+    @Input() groupId: string
     @Input() index: number
     @Input() assetCompareCount: number
     @Input() assetGroupCount: number
@@ -129,7 +130,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Set viewer to "loading"
         this.state = viewState.loading
         // Construct new/replacement asset
-        this.asset = new Asset(this.assetId, this._http, this.testEnv)
+        if (this.groupId) {
+            // Pass groupid if asset is loaded via a group
+            this.asset = new Asset(this.assetId, this._http, this.testEnv, this.groupId)
+        } else {
+            this.asset = new Asset(this.assetId, this._http, this.testEnv)
+        }
         
         if (this.assetSub) {
             this.assetSub.unsubscribe()
@@ -468,8 +474,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Workaround for missing sizes of particular thumbnails
      */
     private thumbnailError(event: Event) : void {
-        this.thumbnailSize--
+        if (this.thumbnailSize > 0) {
+            this.thumbnailSize--
+        }
     }
-
 }
 
