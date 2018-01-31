@@ -474,8 +474,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Workaround for missing sizes of particular thumbnails
      */
     private thumbnailError(event: Event) : void {
-        this.thumbnailSize--
+        if (this.thumbnailSize > 0) {
+            this.thumbnailSize--
+        }
     }
-
 }
 
