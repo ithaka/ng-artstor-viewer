@@ -37,16 +37,16 @@ return Promise.resolve()
   .then(exitCode => exitCode === 0 ? Promise.resolve() : Promise.reject())
   .then(() => console.log('ES5 compilation succeeded.'))
   // Copy typings and metadata to `dist/` folder.
-  .then(() => Promise.resolve()
-    .then(() => _relativeCopy('**/*.d.ts', es2015OutputFolder, distFolder))
-    .then(() => _relativeCopy('**/*.metadata.json', es2015OutputFolder, distFolder))
-    .then(() => console.log('Typings and metadata copy succeeded.'))
-  )
+  // .then(() => Promise.resolve()
+  //   .then(() => _relativeCopy('**/*.d.ts', es2015OutputFolder, distFolder))
+  //   .then(() => _relativeCopy('**/*.metadata.json', es2015OutputFolder, distFolder))
+  //   .then(() => console.log('Typings and metadata copy succeeded.'))
+  // )
   // Bundle lib.
   .then(() => {
     // Base configuration.
     const es5Entry = path.join(es5OutputFolder, `${libName}.js`);
-    const es2015Entry = path.join(es2015OutputFolder, `${libName}.js`);
+    // const es2015Entry = path.join(es2015OutputFolder, `${libName}.js`);
     const rollupBaseConfig = {
       moduleName: camelCase(libName),
       sourceMap: true,
@@ -96,17 +96,17 @@ return Promise.resolve()
     });
 
     // ESM+ES2015 flat module bundle.
-    const fesm2015config = Object.assign({}, rollupBaseConfig, {
-      entry: es2015Entry,
-      dest: path.join(distFolder, `${libName}.js`),
-      format: 'es'
-    });
+    // const fesm2015config = Object.assign({}, rollupBaseConfig, {
+    //   entry: es2015Entry,
+    //   dest: path.join(distFolder, `${libName}.js`),
+    //   format: 'es'
+    // });
 
     const allBundles = [
       umdConfig,
       minifiedUmdConfig,
-      fesm5config,
-      fesm2015config
+      fesm5config
+      // fesm2015config
     ].map(cfg => rollup.rollup(cfg).then(bundle => bundle.write(cfg)));
 
     return Promise.all(allBundles)
