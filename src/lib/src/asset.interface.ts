@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs/Rx'
 
 export class Asset {
   private http: HttpClient
-  private testEnv: boolean
+  private hostname: string = '//library.artstor.org/'
 
   private header = new HttpHeaders().set('Content-Type', 'application/json');
   private defaultOptions = { headers: this.header, withCredentials: true };
@@ -97,16 +97,18 @@ export class Asset {
         "artworktype"
     ];
 
-  constructor(asset_id: string, http: HttpClient, testEnv? : boolean, groupId ?: string) {
+  constructor(asset_id: string, http: HttpClient, altHostname? : string, groupId ?: string) {
     this.id = this.artstorid = asset_id
     this.groupId = groupId
-    this.testEnv = testEnv
+    if (altHostname) {
+        this.hostname = altHostname
+    }
     this.http = http
     this.loadMediaMetaData();
   }
 
   private getUrl(): string {
-    return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    return this.hostname
   }
 
   /**
@@ -240,7 +242,7 @@ export class Asset {
     if( data.viewer_data ){
         this.viewerData = data.viewer_data
     }
-
+    let isStage = (this.hostname && this.hostname.indexOf('stage') > -1)
     // Save the Tile Source for IIIF
     let imgPath
     if (data && data.metadata && data.metadata[0] && data.metadata[0]['image_url']) {
@@ -248,14 +250,14 @@ export class Asset {
     } else {
         imgPath = '/' + data['image_url'].substring(0, data['image_url'].lastIndexOf('.fpx') + 4)
     }
-    this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+    this.tileSource = (isStage ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
 
     // If Kaltura, we need more information!
     if (this.typeName() == 'kaltura' || this.typeName() == 'audio' || this.typeName() == 'video') {
         this.getFpxInfo(this.id, 24)
             .then(data => {
                 this.kalturaUrl = data['imageUrl'];
-                if (this.testEnv) {
+                if (isStage) {
                     this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
                 }
                 this.dataLoadedSource.next(true);

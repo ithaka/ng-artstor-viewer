@@ -52,7 +52,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() isFullscreen: boolean
     @Input() showCaption: boolean
     @Input() quizMode: boolean
-    @Input() testEnv: boolean
+    @Input() altHostname: string
 
     // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
@@ -119,7 +119,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private getUrl(): string {
-        return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+        return this.altHostname ? this.altHostname : '//library.artstor.org/'
     }
 
     private loadAssetById(): void {
@@ -132,9 +132,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Construct new/replacement asset
         if (this.groupId) {
             // Pass groupid if asset is loaded via a group
-            this.asset = new Asset(this.assetId, this._http, this.testEnv, this.groupId)
+            this.asset = new Asset(this.assetId, this._http, this.altHostname, this.groupId)
         } else {
-            this.asset = new Asset(this.assetId, this._http, this.testEnv)
+            this.asset = new Asset(this.assetId, this._http, this.altHostname)
         }
         
         if (this.assetSub) {
@@ -423,7 +423,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         }
 
         // Ceanup
-        return (this.testEnv ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + imagePath;
+        return ((this.altHostname && this.altHostname.indexOf('stage') > -1) ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + imagePath;
     }
 
     // Keep: We will want to dynamically load the Kaltura player
