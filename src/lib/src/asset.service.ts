@@ -76,13 +76,12 @@ export class AssetService {
         .get<MetadataResponse>( url, { headers: headers, withCredentials: true })
   }
 
-  public getFpxInfo(assetId: string, objectTypeId: number): Promise<any> {
+  public getFpxInfo(assetId: string, objectTypeId: number): Observable<ImageFPXResponse> {
     let requestUrl = this.getUrl() + 'api/imagefpx/' + assetId + '/' + objectTypeId;
 
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
-        .get(requestUrl, { headers: headers, withCredentials: true })
-        .toPromise()
+        .get<ImageFPXResponse>(requestUrl, { headers: headers, withCredentials: true })
   }
 }
 
@@ -118,4 +117,17 @@ interface MetadataField {
   fieldName: string
   fieldValue: string
   index: number
+}
+
+interface ImageFPXResponse {
+  height: number
+  id: {
+    fileName: string
+    resolution: number
+  }
+  imageId: string
+  imageUrl: string
+  resolutionX: number
+  resolutionY: number
+  width: number
 }
