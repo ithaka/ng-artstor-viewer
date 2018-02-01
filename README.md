@@ -27,7 +27,7 @@ If you need to debug the integration app, please check `./integration/README.md`
 Perform the _clone-to-launch_ steps with these terminal commands.
 
 ```
-git clone https://github.com/filipesilva/ng-artstor-viewer.git
+git clone git@github.com:ithaka/ng-artstor-viewer.git
 cd ng-artstor-viewer
 npm install
 npm start
