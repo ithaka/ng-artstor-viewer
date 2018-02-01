@@ -132,9 +132,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Construct new/replacement asset
         if (this.groupId) {
             // Pass groupid if asset is loaded via a group
-            this.asset = new Asset(this.assetId, this._http, this.testEnv, this.groupId)
+            this.asset = new Asset(this.assetId, this.testEnv, this.groupId)
         } else {
-            this.asset = new Asset(this.assetId, this._http, this.testEnv)
+            this.asset = new Asset(this.assetId, this.testEnv)
         }
         
         if (this.assetSub) {
@@ -155,7 +155,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadViewer(): void {
         // Object types that need loaders
-        switch (this.asset.typeName()) {
+        switch (this.asset.typeName) {
             default:
                 // Display thumbnail
                 this.state = viewState.thumbnailFallback
