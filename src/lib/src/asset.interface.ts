@@ -11,10 +11,10 @@ export class Asset {
   groupId: string;
   typeId: number; // determines what media type the asset is
   typeName: string // the name correlating to the typeId
-  description: string
+//   description: string
   title: string;
-  creator: string;
-  date: string;
+//   creator: string;
+//   date: string;
   imgURL: string;
   kalturaUrl: string;
   fileExt: string;
@@ -22,7 +22,7 @@ export class Asset {
   downloadName: string
   tileSource: string;
 //   record: any; // not ever set
-  collectionName: string = ''
+//   collectionName: string = ''
 //   collectionType: number // not ever set
   // Not reliably available
   collectionId: number
@@ -39,12 +39,12 @@ export class Asset {
 //   private dataLoadedSource = new BehaviorSubject<boolean>(false);
 //   public isDataLoaded = this.dataLoadedSource.asObservable();
 
-  public disableDownload: boolean = false;
+  public disableDownload: boolean = false
 
   /** Used for holding asset file properties array from the service response */
-  filePropertiesArray: FileProperty[] = [];
+  filePropertiesArray: FileProperty[] = []
   /** Used for holding formatted asset metadata from the service response */
-  formattedMetaArray: FormattedMetadata[] = [];
+  formattedMetadata: FormattedMetadata = {}
 
   /** Used for holding media resolver info from the service response */
   viewerData?: {
@@ -70,42 +70,23 @@ export class Asset {
 //       return this.objectTypeNames[this.typeId];
 //   }
 
-  private formatMetadata(metadata: MetadataField[]): FormattedMetadata[] {
-    let metaArray: FormattedMetadata[] = []
-    // loop through all of the metadata we get from the service
-    for(let data of metadata){
-        let fieldExists = false
-
-        // if the fieldName matches, we store all the data under one object here
-        for(let metaData of metaArray){
-            if(metaData.fieldName === data.fieldName){
-                metaData.fieldValue.push(data.fieldValue);
-                fieldExists = true;
-                break;
-            }
-        }
-
-        // if there was no match to the fieldName above, we create a field and begin collating metadata beneath it
-        if(!fieldExists){
-            let fieldObj: FormattedMetadata = {
-                fieldName: data.fieldName,
-                fieldValue: []
-            }
-            // see Air-826 - sometimes the data has a link property, which can vary from fieldValue, but
-            //  the institution actually wanted the fieldValue to be the same as the link... so that's what this does
+    private formatMetadata(metadata: MetadataField[]): FormattedMetadata {
+        let formattedData: FormattedMetadata
+        for (let data of metadata) {
+            // this is stupid, but if there's a link then it needs to be assigned to the fieldValue
             if (data.link) {
                 data.fieldValue = data.link
             }
 
-            fieldObj.fieldValue.push(data.fieldValue);
-            metaArray.push(fieldObj);
+            // if the field exists, add to it
+            if (formattedData[data.fieldName]) {
+                formattedData[data.fieldName].push(data.fieldValue)
+            } else { // otherwise make a new field
+                formattedData[data.fieldName] = [data.fieldValue]
+            }
         }
-
+        return formattedData
     }
-
-    // this.formattedMetaArray = metaArray;
-    return metaArray
-  }
 
 //   /**
 //    * Searches through the metaDataArray for the asset's collection name
@@ -120,35 +101,36 @@ export class Asset {
 //     }
 //   }
 
-  /** 
-   * Set any local values that are contained in the metadata array - needs to be called after formatMetadata
-   * @param fields An array of key/value pairs, where you pass in the fieldName you want to search for
-   *    and along with the localValue you want it assigned to
-   */
-    private setFieldsFromMetadata(fields: { fieldName: string, localValue: any }[]): void {
-        for (let field of fields) {
-            // assign the local value to the matching metadata field's fieldValue
-            field.localValue = this.formattedMetaArray.find((metaObj) => {
-                return metaObj.fieldName == field.fieldName
-            }).fieldValue
-        }
+//   /** 
+//    * Set any local values that are contained in the metadata array - needs to be called after formatMetadata
+//    * @param fields An array of key/value pairs, where you pass in the fieldName you want to search for
+//    *    and along with the localValue you want it assigned to
+//    */
+//     private setFieldsFromMetadata(fields: { fieldName: string, localValue: string }[]): void {
+//         for (let field of fields) {
+//             // assign the local value to the matching metadata field's fieldValue
+//             // field.localValue = this.formattedMetaArray.find((metaObj) => {
+//             //     return metaObj.fieldName == field.fieldName
+//             // }).fieldValue
+//             field.localValue = this.forma
+//         }
 
 
-    // for(var i = 0; i < this.metaDataArray.length; i++){
-    //     if(this.metaDataArray[i].fieldName == 'Creator'){
-    //         this.creator = this.metaDataArray[i].fieldValue;
-    //     //   document.querySelector('meta[name="DC.creator"]').setAttribute('content', this.creator);
-    //     }
-        // TODO: Find out what the heck is happening here with the querySelector
-    // //   else if(this.metaDataArray[i].fieldName == 'Date'){
-    // //       this.date = this.metaDataArray[i].fieldValue;
-    // //       document.querySelector('meta[name="DCTERMS.issued"]').setAttribute('content', this.date);
-    // //   }
-    // //   else if(this.metaDataArray[i].fieldName == 'Description'){
-    // //       document.querySelector('meta[name="DC.description"]').setAttribute('content', this.metaDataArray[i].fieldValue);
-    // //   }
-    // }
-  }
+//     // for(var i = 0; i < this.metaDataArray.length; i++){
+//     //     if(this.metaDataArray[i].fieldName == 'Creator'){
+//     //         this.creator = this.metaDataArray[i].fieldValue;
+//     //     //   document.querySelector('meta[name="DC.creator"]').setAttribute('content', this.creator);
+//     //     }
+//         // TODO: Find out what the heck is happening here with the querySelector
+//     // //   else if(this.metaDataArray[i].fieldName == 'Date'){
+//     // //       this.date = this.metaDataArray[i].fieldValue;
+//     // //       document.querySelector('meta[name="DCTERMS.issued"]').setAttribute('content', this.date);
+//     // //   }
+//     // //   else if(this.metaDataArray[i].fieldName == 'Description'){
+//     // //       document.querySelector('meta[name="DC.description"]').setAttribute('content', this.metaDataArray[i].fieldValue);
+//     // //   }
+//     // }
+//   }
 
     private buildDownloadLink(data: AssetData): string {
         let downloadLink: string
@@ -196,6 +178,26 @@ export class Asset {
     return objectTypeNames[typeId]
   }
 
+    // this.setFieldsFromMetadata([
+    //     { fieldName: 'Creator', localValue: this.creator },
+    //     { fieldName: 'Date', localValue: this.date },
+    //     { fieldName: 'Description', localValue: this.description },
+    //     { fieldName: "Collection", localValue: this.collectionName }
+    // ])
+
+    get creator(): string {
+        return this.formattedMetadata.Creator[0] || ''
+    }
+    get date(): string {
+        return this.formattedMetadata.Date[0] || ''
+    }
+    get description(): string {
+        return this.formattedMetadata.Description[0] || ''
+    }
+    get collectionName(): string {
+        return this.formattedMetadata.Collection[0] || ''
+    }
+
   /**
    * Sets up the Asset object with needed properties
    * - Behaves like a delayed constructor
@@ -214,16 +216,18 @@ export class Asset {
     if (data.metadata_json) {
         // this.metaDataArray =  data['metadata_json']
         // this.formatMetadata();
-        this.formattedMetaArray = this.formatMetadata(data.metadata_json)
+        this.formattedMetadata = this.formatMetadata(data.metadata_json)
     }
+
+    // TODO: make sure any local viewer references to these now access the metadata object
     // Set Title
     // - Optional: We can come through the metadata array to find the title: let title = this.metaDataArray.find(elem => elem.fieldName.match(/^\s*Title/))
-    this.setFieldsFromMetadata([
-        { fieldName: 'Creator', localValue: this.creator },
-        { fieldName: 'Date', localValue: this.date },
-        { fieldName: 'Description', localValue: this.description },
-        { fieldName: "Collection", localValue: this.collectionName }
-    ])
+    // this.setFieldsFromMetadata([
+    //     { fieldName: 'Creator', localValue: this.creator },
+    //     { fieldName: 'Date', localValue: this.date },
+    //     { fieldName: 'Description', localValue: this.description },
+    //     { fieldName: "Collection", localValue: this.collectionName }
+    // ])
     this.title = data.title
     // Set Creator, Date, and Description
     // this.setCreatorDate();
@@ -338,6 +342,5 @@ export class Asset {
 }
 
 interface FormattedMetadata {
-    fieldName: string
-    fieldValue: string[]
+    [fieldName: string]: string[]
 }
