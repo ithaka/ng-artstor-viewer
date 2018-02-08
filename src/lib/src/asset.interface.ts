@@ -71,7 +71,7 @@ export class Asset {
 //   }
 
     private formatMetadata(metadata: MetadataField[]): FormattedMetadata {
-        let formattedData: FormattedMetadata
+        let formattedData: FormattedMetadata = {}
         for (let data of metadata) {
             // this is stupid, but if there's a link then it needs to be assigned to the fieldValue
             if (data.link) {
