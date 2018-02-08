@@ -6,6 +6,7 @@ import * as OpenSeadragon from 'openseadragon';
 import '../viewers/krpano.js';
 // Internal Dependencies
 import { Asset } from "../asset.interface"
+import { AssetService } from '../asset.service'
 
 // Browser API delcarations
 declare var ActiveXObject: any
@@ -79,7 +80,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private osdViewer: any
 
     constructor(
-        private _http: HttpClient
+        private _http: HttpClient, // TODO: move _http into a service
+        private _asset: AssetService
     ) { 
         if(!this.index) {
             this.index = 0
@@ -130,32 +132,41 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Set viewer to "loading"
         this.state = viewState.loading
         // Construct new/replacement asset
-        if (this.groupId) {
-            // Pass groupid if asset is loaded via a group
-            this.asset = new Asset(this.assetId, this.testEnv, this.groupId)
-        } else {
-            this.asset = new Asset(this.assetId, this.testEnv)
-        }
+        // if (this.groupId) {
+        //     // Pass groupid if asset is loaded via a group
+        //     this.asset = new Asset(this.assetId, this.testEnv, this.groupId)
+        // } else {
+        //     this.asset = new Asset(this.assetId, this.testEnv)
+        // }
         
-        if (this.assetSub) {
-            this.assetSub.unsubscribe()
-        }
+        // if (this.assetSub) {
+        //     this.assetSub.unsubscribe()
+        // }
 
-        this.assetSub = this.asset.isDataLoaded.subscribe(
-            loaded => {
-                if (loaded) {
-                    this.assetMetadata.emit(this.asset)
-                    this.loadViewer()
-                }
-            },
-            error => {
-                this.assetMetadata.emit({error: error})
+        // this.assetSub = this.asset.isDataLoaded.subscribe(
+        //     loaded => {
+        //         if (loaded) {
+        //             this.assetMetadata.emit(this.asset)
+        //             this.loadViewer()
+        //         }
+        //     },
+        //     error => {
+        //         this.assetMetadata.emit({error: error})
+        //     })
+        
+        this._asset.buildAsset(this.assetId, this.groupId)
+            .subscribe((asset) => {
+                this.asset = asset
+                this.assetMetadata.emit(asset)
+                this.loadViewer(asset)
+            }, (err) => {
+                this.assetMetadata.emit({ error: err })
             })
     }
 
-    private loadViewer(): void {
+    private loadViewer(asset: Asset): void {
         // Object types that need loaders
-        switch (this.asset.typeName) {
+        switch (asset.typeName) {
             default:
                 // Display thumbnail
                 this.state = viewState.thumbnailFallback

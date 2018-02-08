@@ -1,9 +1,17 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs/Rx'
 
 import { Asset } from './asset.interface'
 
+
+/**
+ * The point of the AssetService is to get all the relevant information from the server reguarding the contstruciton of assets.
+ * Pls don't add things that don't have to do with the construction of assets
+ * This service gets everything that an asset needs for its construction from the services, cleans the data into a
+ *  digestible format (outlined in the interfaces below), and then feeds that to the Asset constructor in order to
+ *  return an Observable resolved with an Asset. The asset is responsible for assigning default values.
+ */
 @Injectable()
 export class AssetService {
 
@@ -27,7 +35,6 @@ export class AssetService {
 
   public buildAsset(assetId: string, groupId?: string): Observable<Asset> {
     return this.getMetadata(assetId, groupId)
-      .take(1)
       .flatMap((assetData) => {
 
         // do we need to make an imageFpx call to get kaltura data??
@@ -35,7 +42,6 @@ export class AssetService {
           case 12:
           case 24:
             return this.getFpxInfo(assetData.object_id, assetData.object_type_id)
-              .take(1)
               .map((res) => {
                 assetData.fpxInfo = res
               })
@@ -69,9 +75,9 @@ export class AssetService {
           }
           let data: AssetDataResponse = res.metadata[0]
 
-          // although this seems repetitive/wordy, it provides us an ability to set defaults at the source
-          //  and gives us insulation from server name changes because we have a single place to update
-          //  the naming of any property
+          // although this seems repetitive/wordy, it gives us insulation from server name changes because we
+          //  have a single place to update the naming of any property, resolve types and make changes to data shape
+          // defaults which should otherwise be default values returned by the service can also be assigned here
           let assetData: AssetData = {
             object_id: data.object_id,
             groupId: groupId,
