@@ -19,7 +19,13 @@ export class AssetService {
 
   constructor(
     private _http: HttpClient
-  ) { }
+  ) {
+    let hostname: string = document.location.hostname
+    if (hostname.indexOf('localhost') || hostname.indexOf('stage')) {
+      this.testEnv = true
+    }
+    // console.log(document.location.hostname)
+  }
 
   private getUrl(): string {
     return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
@@ -96,6 +102,7 @@ export class AssetService {
             resolution_x: data.resolution_x,
             resolution_y: data.resolution_y,
             thumbnail_url: data.thumbnail_url,
+            tileSourceHostname: this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org',
             title: data.title && data.title !== "" ? data.title : 'Untitled',
             viewer_data: data.viewer_data,
             width: data.width,
@@ -116,6 +123,13 @@ export class AssetService {
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
         .get<ImageFPXResponse>(requestUrl, { headers: headers, withCredentials: true })
+        .map((res) => {
+            // replace imageUrl with stage url if we are in rest mode
+            if (this.testEnv) {
+                res.imageUrl = res.imageUrl.replace('kts.artstor','kts.stage.artstor')
+            }
+            return res
+        })
   }
 }
 
@@ -143,6 +157,7 @@ export interface AssetData {
   resolution_x: number
   resolution_y: number
   thumbnail_url: string
+  tileSourceHostname: string
   title: string
   viewer_data?: {
       base_asset_url?: string,

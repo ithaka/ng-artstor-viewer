@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs/Rx'
 import { AssetData, MetadataField, FileProperty } from './asset.service'
 
 export class Asset {
-  private testEnv: boolean
+//   private testEnv: boolean
 
   id: string;
   groupId: string;
@@ -54,6 +54,8 @@ export class Asset {
 
 //   constructor(asset_id: string, testEnv? : boolean, groupId ?: string) {
   constructor(assetData: AssetData) {
+    console.log('data', assetData)
+    console.log('string', assetData.object_id)
     // this.id = asset_id
     // this.groupId = groupId
     // this.testEnv = testEnv
@@ -159,7 +161,7 @@ export class Asset {
                 break
             default:
                 if (data.image_url) { //this is a general fallback, but should work specifically for images and video thumbnails
-                    let imageServer = 'http://imgserver.artstor.net/'
+                    let imageServer = 'http://imgserver.artstor.net/' // TODO: check if this should be different for test
                     let url = imageServer + data.image_url + "?cell=" + data.download_size + "&rgnn=0,0,1,1&cvt=JPEG";
                     downloadLink = data.baseUrl + "api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
                 } else {
@@ -270,14 +272,15 @@ export class Asset {
         // imgPath = '/' + data['image_url'].substring(0, data['image_url'].lastIndexOf('.fpx') + 4)
         imgPath = '/' + data.image_url.substring(0, data.image_url.lastIndexOf('.fpx') + 4)
     }
-    this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+    // this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+    this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
 
     // set up kaltura info if it exists
     if (data.fpxInfo) {
         this.kalturaUrl = data.fpxInfo.imageUrl
-        if (this.testEnv) {
-            this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
-        }
+        // if (this.testEnv) {
+        //     this.kalturaUrl = this.kalturaUrl.replace('kts.artstor','kts.stage.artstor')
+        // }
     }
 
 
