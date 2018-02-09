@@ -1,8 +1,8 @@
 <div *ngIf="asset" class="asset-viewer" [class.fullscreen]="isFullscreen" (contextmenu)="disableContextMenu($event)">
   <div class="more-results overlay-wrap--center" id="loader-wrapper" *ngIf="state == 0"><i class="icon-asterisk icon-spin icon-large"></i></div>
   <!-- IIIF Image Viewer-->
-  <div [class.hidden]="state != 1">
-    <div class="item osd-wrap" [attr.id]="'osd-' + asset.id + '-' + index" [attr.zoomValue]="lastZoomValue"></div>
+  <div >
+    <div class="item osd-wrap" [attr.id]="osdViewerId" [attr.zoomValue]="lastZoomValue"></div>
   </div>
   <!-- Video Player-->
   <div class="video-player" [class.hidden]="state != 2">

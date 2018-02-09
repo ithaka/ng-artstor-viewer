@@ -28,19 +28,6 @@ enum viewState {
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
-    // Required Input
-    private _assetId: string = ''
-    @Input() set assetId(value: string) {
-        if (value != this._assetId) {
-            this._assetId = value
-            this.loadAssetById()
-        }
-    }
-    get assetId(): string {
-        // other logic
-        return this._assetId
-    }
-
     // Optional Inputs
     @Input() groupId: string
     @Input() index: number
@@ -53,6 +40,21 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() showCaption: boolean
     @Input() quizMode: boolean
     @Input() testEnv: boolean
+
+    // Required Input
+    private _assetId: string = ''
+    @Input() set assetId(value: string) {
+        this._asset.testEnv = this.testEnv // keep test environment set here
+        if (value && value != this._assetId) {
+            this._assetId = value
+            console.log('CALLING FOR NEW ASSET')
+            this.loadAssetById(this.assetId, this.groupId)
+        }
+    }
+    get assetId(): string {
+        // other logic
+        return this._assetId
+    }
 
     // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
@@ -77,6 +79,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private kalturaUrl: string
     private osdViewer: any
+    private osdViewerId: string
 
     constructor(
         private _http: HttpClient, // TODO: move _http into a service
@@ -88,9 +91,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        // assign testEnv to the input
-        this._asset.testEnv = this.testEnv
-        this.loadAssetById()
         // Assets don't initialize with fullscreen variable
         // And assets beyond the first/primary only show in fullscreen
         if (this.index > 0) {
@@ -118,18 +118,20 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-
+        console.log('VIEW INIT!')
     }
 
     // private getUrl(): string {
     //     return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
     // }
 
-    private     loadAssetById(): void {
+    private loadAssetById(assetId: string, groupId: string): void {
         // Destroy previous viewers
         if (this.osdViewer) {
             this.osdViewer.destroy()
         }
+        // change id for new viewer
+        this.osdViewerId = 'osd-' + assetId + '-' + this.index
         // Set viewer to "loading"
         this.state = viewState.loading
         // Construct new/replacement asset
@@ -155,8 +157,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         //         this.assetMetadata.emit({error: error})
         //     })
         
-        this._asset.buildAsset(this.assetId, this.groupId)
+        this._asset.buildAsset(assetId, groupId)
             .subscribe((asset) => {
+                console.log('SETTING ASSET', this.asset, typeof Asset)
                 this.asset = asset
                 this.assetMetadata.emit(asset)
                 this.loadViewer(asset)
@@ -208,12 +211,14 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
+        console.log(this.asset)
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
-        let id =  this.asset.id + '-' + this.index;
+        // let id = 'osd-' + this.asset.id + '-' + this.index;
+        console.log(this.osdViewerId, document.getElementById(this.osdViewerId))
         this.osdViewer = new OpenSeadragon({
-            id: 'osd-' + id,
+            id: this.osdViewerId,
             // prefix for Icon Images
             prefixUrl: this._asset.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
@@ -223,9 +228,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             },
             controlsFadeLength: 500,
             //   debugMode: true,
-            zoomInButton: 'zoomIn-' + id,
-            zoomOutButton: 'zoomOut-' + id,
-            homeButton: 'zoomFit-' + id,
+            zoomInButton: 'zoomIn-' + this.osdViewerId,
+            zoomOutButton: 'zoomOut-' + this.osdViewerId,
+            homeButton: 'zoomFit-' + this.osdViewerId,
             sequenceMode: true,
             initialPage: 0,
             nextButton: 'nextButton',
