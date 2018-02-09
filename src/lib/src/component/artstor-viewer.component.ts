@@ -44,7 +44,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Required Input
     private _assetId: string = ''
     @Input() set assetId(value: string) {
-        this._asset.testEnv = this.testEnv // keep test environment set here
+        this._assetService.testEnv = this.testEnv // keep test environment set here
         if (value && value != this._assetId) {
             this._assetId = value
             console.log('CALLING FOR NEW ASSET')
@@ -54,6 +54,22 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     get assetId(): string {
         // other logic
         return this._assetId
+    }
+    get asset(): Asset {
+        if (this._asset) {
+            return this._asset
+        } else {
+            // this super weird bad-feeling thing is because, for some reason, the template
+            //  *ngIf="asset" always thought asset was undefined, and if we left it off we'd
+            //  get errors saying "cannot read property 'id' of undefined"
+            //  so this is a simple getter/setter combo which will initially provide an empty
+            //  object, but an empty object should not be assignable here at any point in the future
+            //  because this coercive casting is a bad pattern
+            return <Asset>{}
+        }
+    }
+    set asset(asset: Asset) {
+        this._asset = asset
     }
 
     // Optional Outputs
@@ -65,7 +81,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
-    private asset: Asset
+    private _asset: Asset
     private assetSub: Subscription
     private state: viewState = viewState.loading
     private removableAsset: boolean = false
@@ -83,8 +99,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         private _http: HttpClient, // TODO: move _http into a service
-        private _asset: AssetService
+        private _assetService: AssetService
     ) { 
+        console.log('CONSTRUCTING VIEWER')
         if(!this.index) {
             this.index = 0
         }
@@ -157,10 +174,10 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         //         this.assetMetadata.emit({error: error})
         //     })
         
-        this._asset.buildAsset(assetId, groupId)
+        this._assetService.buildAsset(assetId, groupId)
             .subscribe((asset) => {
-                console.log('SETTING ASSET', this.asset, typeof Asset)
                 this.asset = asset
+                console.log('SETTING ASSET', this.asset, typeof Asset)
                 this.assetMetadata.emit(asset)
                 this.loadViewer(asset)
             }, (err) => {
@@ -220,7 +237,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this.osdViewer = new OpenSeadragon({
             id: this.osdViewerId,
             // prefix for Icon Images
-            prefixUrl: this._asset.getUrl() + 'assets/img/osd/',
+            prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
             gestureSettingsMouse: {
                 scrollToZoom: true,

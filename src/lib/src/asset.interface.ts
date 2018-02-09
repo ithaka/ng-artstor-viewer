@@ -267,15 +267,14 @@ export class Asset {
     data.viewer_data && (this.viewerData = data.viewer_data)
 
     // Save the Tile Source for IIIF
+    //  sometimes it doesn't come back with .fpx, so we need to add it
     let imgPath
-    // TODO: Figure out what the heck is going on here
-    // if (data && data.metadata && data.metadata[0] && data.metadata[0]['image_url']) {
-    if (data.image_url) {
+    if (data.image_url.lastIndexOf('.fpx') > -1) {
         // imgPath = '/' + data.metadata[0]['image_url']
-        imgPath = '/' + data.image_url
+        imgPath = '/' + data.image_url.substring(0, data.image_url.lastIndexOf('.fpx') + 4)
     } else {
         // imgPath = '/' + data['image_url'].substring(0, data['image_url'].lastIndexOf('.fpx') + 4)
-        imgPath = '/' + data.image_url.substring(0, data.image_url.lastIndexOf('.fpx') + 4)
+        imgPath = '/' + data.image_url
     }
     // this.tileSource = (this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org') + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
     this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
