@@ -50,7 +50,7 @@ export class AssetService {
           case 12:
           case 24:
             console.log('needs fpx')
-            return this.getFpxInfo(assetData.object_id, assetData.object_type_id)
+            return this.getFpxInfo(assetData.object_id)
               .map((res) => {
                 console.log('fpx return')
                 assetData.fpxInfo = res
@@ -123,8 +123,8 @@ export class AssetService {
    * @param assetId The artstor id for the relevant asset
    * @param objectTypeId The number corresponding to the asset's type - a map to English names can be found in the Asset class
    */
-  private getFpxInfo(assetId: string, objectTypeId: number): Observable<ImageFPXResponse> {
-    let requestUrl = this.getUrl() + 'api/imagefpx/' + assetId + '/' + objectTypeId
+  private getFpxInfo(assetId: string): Observable<ImageFPXResponse> {
+    let requestUrl = this.getUrl() + 'api/imagefpx/' + assetId + '/24'
 
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
