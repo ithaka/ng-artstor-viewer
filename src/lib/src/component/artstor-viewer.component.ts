@@ -23,7 +23,6 @@ enum viewState {
 
 @Component({
   selector: 'artstor-viewer',
-  providers: [],
   templateUrl: './artstor-viewer.component.html',
   styleUrls: ['./artstor-viewer.component.css']
 })
@@ -89,6 +88,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        // assign testEnv to the input
+        this._asset.testEnv = this.testEnv
         this.loadAssetById()
         // Assets don't initialize with fullscreen variable
         // And assets beyond the first/primary only show in fullscreen
@@ -120,11 +121,11 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     }
 
-    private getUrl(): string {
-        return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
-    }
+    // private getUrl(): string {
+    //     return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    // }
 
-    private loadAssetById(): void {
+    private     loadAssetById(): void {
         // Destroy previous viewers
         if (this.osdViewer) {
             this.osdViewer.destroy()
@@ -154,6 +155,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         //         this.assetMetadata.emit({error: error})
         //     })
         
+        console.log('building new asset', this.assetId)
         this._asset.buildAsset(this.assetId, this.groupId)
             .subscribe((asset) => {
                 this.asset = asset
@@ -215,7 +217,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this.osdViewer = new OpenSeadragon({
             id: 'osd-' + id,
             // prefix for Icon Images
-            prefixUrl: this.getUrl() + 'assets/img/osd/',
+            prefixUrl: this._asset.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
             gestureSettingsMouse: {
                 scrollToZoom: true,

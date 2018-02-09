@@ -20,14 +20,14 @@ export class AssetService {
   constructor(
     private _http: HttpClient
   ) {
-    let hostname: string = document.location.hostname
-    if (hostname.indexOf('localhost') || hostname.indexOf('stage')) {
-      this.testEnv = true
-    }
+    // let hostname: string = document.location.hostname
+    // if (hostname.indexOf('localhost') || hostname.indexOf('stage')) {
+    //   this.testEnv = true
+    // }
     // console.log(document.location.hostname)
   }
 
-  private getUrl(): string {
+  public getUrl(): string {
     return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
   }
 
@@ -40,22 +40,28 @@ export class AssetService {
 
 
   public buildAsset(assetId: string, groupId?: string): Observable<Asset> {
+    console.log('got call for asset')
     return this.getMetadata(assetId, groupId)
       .flatMap((assetData) => {
+        console.log('got asset data back', assetData)
 
         // do we need to make an imageFpx call to get kaltura data??
         switch (assetData.object_type_id) {
           case 12:
           case 24:
+            console.log('needs fpx')
             return this.getFpxInfo(assetData.object_id, assetData.object_type_id)
               .map((res) => {
+                console.log('fpx return')
                 assetData.fpxInfo = res
+                return assetData
               })
           default: 
             return Observable.of(assetData)
         }
       })
       .map((assetData) => {
+        console.log('calling asset constructor', assetData)
         return new Asset(assetData)
       })
   }

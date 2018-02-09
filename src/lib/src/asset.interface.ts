@@ -54,12 +54,13 @@ export class Asset {
 
 //   constructor(asset_id: string, testEnv? : boolean, groupId ?: string) {
   constructor(assetData: AssetData) {
-    console.log('data', assetData)
-    console.log('string', assetData.object_id)
     // this.id = asset_id
     // this.groupId = groupId
     // this.testEnv = testEnv
     // this.loadMediaMetaData()
+    if (!assetData) {
+        throw new Error('No data passed to construct asset')
+    }
     this.initAssetProperties(assetData)
   }
 
@@ -218,7 +219,8 @@ export class Asset {
         // this.formatMetadata();
         this.formattedMetadata = this.formatMetadata(data.metadata_json)
     }
-
+    this.id = data.object_id
+    this.typeId = data.object_type_id
     // TODO: make sure any local viewer references to these now access the metadata object
     // Set Title
     // - Optional: We can come through the metadata array to find the title: let title = this.metaDataArray.find(elem => elem.fieldName.match(/^\s*Title/))
@@ -249,7 +251,6 @@ export class Asset {
     }).fileName
     
     // Set Object Type ID
-    this.typeId = data.object_type_id
     // // Build Download Link
     // // - Download link is differs based on typeIds
     // let imageServer = data.imageServer || 'http://imgserver.artstor.net/'
