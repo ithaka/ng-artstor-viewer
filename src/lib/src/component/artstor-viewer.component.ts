@@ -155,7 +155,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         //         this.assetMetadata.emit({error: error})
         //     })
         
-        console.log('building new asset', this.assetId)
         this._asset.buildAsset(this.assetId, this.groupId)
             .subscribe((asset) => {
                 this.asset = asset
@@ -196,7 +195,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * Gets information needed to load IIIF viewers, such as OpenSeaDragon
      */
     private loadIIIF(): void {
-        console.log("LOAD IIIF")
         if (this.asset.tileSource) {
             this.tileSource = this.asset.tileSource
             this.loadOpenSea()

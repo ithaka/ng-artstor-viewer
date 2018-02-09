@@ -40,19 +40,15 @@ export class AssetService {
 
 
   public buildAsset(assetId: string, groupId?: string): Observable<Asset> {
-    console.log('got call for asset')
     return this.getMetadata(assetId, groupId)
       .flatMap((assetData) => {
-        console.log('got asset data back', assetData)
 
         // do we need to make an imageFpx call to get kaltura data??
         switch (assetData.object_type_id) {
           case 12:
           case 24:
-            console.log('needs fpx')
             return this.getFpxInfo(assetData.object_id)
               .map((res) => {
-                console.log('fpx return')
                 assetData.fpxInfo = res
                 return assetData
               })
@@ -61,7 +57,6 @@ export class AssetService {
         }
       })
       .map((assetData) => {
-        console.log('calling asset constructor', assetData)
         return new Asset(assetData)
       })
   }
