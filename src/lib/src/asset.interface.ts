@@ -5,50 +5,50 @@ import { BehaviorSubject, Observable } from 'rxjs/Rx'
 import { AssetData, MetadataField, FileProperty } from './asset.service'
 
 export class Asset {
-  id: string
-  groupId: string
-  typeId: number // determines what media type the asset is
-  typeName: string // the name correlating to the typeId
-  title: string
-  imgURL: string
-  kalturaUrl: string
-  downloadLink: string
-  downloadName: string
-  tileSource: string
-  // Not reliably available
-  collectionId: number
-  SSID: string
-  fileName: string
+    id: string
+    groupId: string
+    typeId: number // determines what media type the asset is
+    typeName: string // the name correlating to the typeId
+    title: string
+    imgURL: string
+    kalturaUrl: string
+    downloadLink: string
+    downloadName: string
+    tileSource: string
+    // Not reliably available
+    collectionId: number
+    SSID: string
+    fileName: string
 
-  viewportDimensions: {
-      contentSize?: any,
-      zoom?: number,
-      containerSize?: any,
-      center?: any
-  } = {}
+    viewportDimensions: {
+        contentSize?: any,
+        zoom?: number,
+        containerSize?: any,
+        center?: any
+    } = {}
 
 //   private dataLoadedSource = new BehaviorSubject<boolean>(false)
 //   public isDataLoaded = this.dataLoadedSource.asObservable()
 
-  public disableDownload: boolean = false
+    public disableDownload: boolean = false
 
-  /** Used for holding asset file properties array from the service response */
-  filePropertiesArray: FileProperty[] = []
-  /** Used for holding formatted asset metadata from the service response */
-  formattedMetadata: FormattedMetadata = {}
+    /** Used for holding asset file properties array from the service response */
+    filePropertiesArray: FileProperty[] = []
+    /** Used for holding formatted asset metadata from the service response */
+    formattedMetadata: FormattedMetadata = {}
 
-  /** Used for holding media resolver info from the service response */
-  viewerData?: {
-    base_asset_url?: string,
-    panorama_xml?: string
-  }
-
-  constructor(assetData: AssetData) {
-    if (!assetData) {
-        throw new Error('No data passed to construct asset')
+    /** Used for holding media resolver info from the service response */
+    viewerData?: {
+        base_asset_url?: string,
+        panorama_xml?: string
     }
-    this.initAssetProperties(assetData)
-  }
+
+    constructor(assetData: AssetData) {
+        if (!assetData) {
+            throw new Error('No data passed to construct asset')
+        }
+        this.initAssetProperties(assetData)
+    }
 
     private formatMetadata(metadata: MetadataField[]): FormattedMetadata {
         let formattedData: FormattedMetadata = {}
@@ -89,30 +89,30 @@ export class Asset {
         return downloadLink
     }
 
-  /**
-   * Sets the correct typeName based on a map
-   * @param typeId the asset's object_type_id
-   */
-  private initTypeName(typeId: number): string {
-    let objectTypeNames: { [key: number]: string } = {
-        1: 'specimen',
-        2: 'visual',
-        3: 'use',
-        6: 'publication',
-        7: 'synonyms',
-        8: 'people',
-        9: 'repository',
-        10: 'image',
-        11: 'panorama',
-        12: 'audio',
-        13: '3d',
-        21: 'powerpoint',
-        22: 'document',
-        23: 'excel',
-        24: 'kaltura'
+    /**
+     * Sets the correct typeName based on a map
+     * @param typeId the asset's object_type_id
+     */
+    private initTypeName(typeId: number): string {
+        let objectTypeNames: { [key: number]: string } = {
+            1: 'specimen',
+            2: 'visual',
+            3: 'use',
+            6: 'publication',
+            7: 'synonyms',
+            8: 'people',
+            9: 'repository',
+            10: 'image',
+            11: 'panorama',
+            12: 'audio',
+            13: '3d',
+            21: 'powerpoint',
+            22: 'document',
+            23: 'excel',
+            24: 'kaltura'
+        }
+        return objectTypeNames[typeId]
     }
-    return objectTypeNames[typeId]
-  }
 
     get creator(): string {
         return this.formattedMetadata.Creator[0] || ''
@@ -127,50 +127,50 @@ export class Asset {
         return this.formattedMetadata.Collection[0] || ''
     }
 
-  /**
-   * Sets up the Asset object with needed properties
-   * - Behaves like a delayed constructor
-   * - Reports status via 'this.dataLoadedSource' observable
-   */
-  private initAssetProperties(data: AssetData): void {
-    // Set array of asset metadata fields to Asset, and format
-    if (data.metadata_json) {
-        this.formattedMetadata = this.formatMetadata(data.metadata_json)
-    }
-    this.id = data.object_id
-    this.typeId = data.object_type_id
-    this.title = data.title
-    this.filePropertiesArray = data.fileProperties
-    this.imgURL = data.thumbnail_url
-    this.typeId = data.object_type_id
-    this.typeName = this.initTypeName(data.object_type_id)
-    this.disableDownload =  data.download_size === '0,0'
-    this.SSID = data.SSID
-    this.fileName = data.fileProperties.find((obj) => {
-        return !!obj.fileName
-    }).fileName
-    // Set Download information
-    let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
-    this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
-    this.downloadLink = this.buildDownloadLink(data)
-    data.viewer_data && (this.viewerData = data.viewer_data)
+    /**
+     * Sets up the Asset object with needed properties
+     * - Behaves like a delayed constructor
+     * - Reports status via 'this.dataLoadedSource' observable
+     */
+    private initAssetProperties(data: AssetData): void {
+        // Set array of asset metadata fields to Asset, and format
+        if (data.metadata_json) {
+            this.formattedMetadata = this.formatMetadata(data.metadata_json)
+        }
+        this.id = data.object_id
+        this.typeId = data.object_type_id
+        this.title = data.title
+        this.filePropertiesArray = data.fileProperties
+        this.imgURL = data.thumbnail_url
+        this.typeId = data.object_type_id
+        this.typeName = this.initTypeName(data.object_type_id)
+        this.disableDownload =  data.download_size === '0,0'
+        this.SSID = data.SSID
+        this.fileName = data.fileProperties.find((obj) => {
+            return !!obj.fileName
+        }).fileName
+        // Set Download information
+        let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
+        this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
+        this.downloadLink = this.buildDownloadLink(data)
+        data.viewer_data && (this.viewerData = data.viewer_data)
 
-    // Save the Tile Source for IIIF
-    //  sometimes it doesn't come back with .fpx, so we need to add it
-    let imgPath
-    if (data.image_url.lastIndexOf('.fpx') > -1) {
-        imgPath = '/' + data.image_url.substring(0, data.image_url.lastIndexOf('.fpx') + 4)
-    } else {
-        imgPath = '/' + data.image_url
-    }
-    this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+        // Save the Tile Source for IIIF
+        //  sometimes it doesn't come back with .fpx, so we need to add it
+        let imgPath
+        if (data.image_url.lastIndexOf('.fpx') > -1) {
+            imgPath = '/' + data.image_url.substring(0, data.image_url.lastIndexOf('.fpx') + 4)
+        } else {
+            imgPath = '/' + data.image_url
+        }
+        this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
 
-    // set up kaltura info if it exists
-    if (data.fpxInfo) {
-        this.kalturaUrl = data.fpxInfo.imageUrl
+        // set up kaltura info if it exists
+        if (data.fpxInfo) {
+            this.kalturaUrl = data.fpxInfo.imageUrl
+        }
+        console.log(this)
     }
-    console.log(this)
-  }
 }
 
 interface FormattedMetadata {
