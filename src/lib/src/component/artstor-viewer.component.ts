@@ -101,7 +101,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         private _http: HttpClient, // TODO: move _http into a service
         private _assetService: AssetService
     ) { 
-        console.log('CONSTRUCTING VIEWER')
         if(!this.index) {
             this.index = 0
         }
@@ -135,7 +134,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        console.log('VIEW INIT!')
     }
 
     // private getUrl(): string {
@@ -151,28 +149,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this.osdViewerId = 'osd-' + assetId + '-' + this.index
         // Set viewer to "loading"
         this.state = viewState.loading
-        // Construct new/replacement asset
-        // if (this.groupId) {
-        //     // Pass groupid if asset is loaded via a group
-        //     this.asset = new Asset(this.assetId, this.testEnv, this.groupId)
-        // } else {
-        //     this.asset = new Asset(this.assetId, this.testEnv)
-        // }
-        
-        // if (this.assetSub) {
-        //     this.assetSub.unsubscribe()
-        // }
-
-        // this.assetSub = this.asset.isDataLoaded.subscribe(
-        //     loaded => {
-        //         if (loaded) {
-        //             this.assetMetadata.emit(this.asset)
-        //             this.loadViewer()
-        //         }
-        //     },
-        //     error => {
-        //         this.assetMetadata.emit({error: error})
-        //     })
         
         this._assetService.buildAsset(assetId, groupId)
             .subscribe((asset) => {
@@ -228,12 +204,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
-        console.log(this.asset)
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
-        // let id = 'osd-' + this.asset.id + '-' + this.index;
-        console.log(this.osdViewerId, document.getElementById(this.osdViewerId))
         this.osdViewer = new OpenSeadragon({
             id: this.osdViewerId,
             // prefix for Icon Images
