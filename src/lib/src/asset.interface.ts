@@ -149,7 +149,7 @@ export class Asset {
     this.fileName = data.fileProperties.find((obj) => {
         return !!obj.fileName
     }).fileName
-    // Set Download information // TODO: how is this.fileExt assigned??
+    // Set Download information
     let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
     this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
     this.downloadLink = this.buildDownloadLink(data)
