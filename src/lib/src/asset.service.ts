@@ -20,11 +20,6 @@ export class AssetService {
   constructor(
     private _http: HttpClient
   ) {
-    // let hostname: string = document.location.hostname
-    // if (hostname.indexOf('localhost') || hostname.indexOf('stage')) {
-    //   this.testEnv = true
-    // }
-    // console.log(document.location.hostname)
   }
 
   public getUrl(): string {
@@ -35,9 +30,7 @@ export class AssetService {
     return this._testEnv
   }
   set testEnv(env: boolean) {
-    console.log('setting test env to', env)
     this._testEnv = env
-    console.log('test env set to', this._testEnv)
   }
 
 
@@ -70,9 +63,7 @@ export class AssetService {
    * @param groupId The group from which the asset was accessed, if it exists (helps with authorization)
    */
   private getMetadata(assetId: string, groupId?: string): Observable<AssetData> {
-    console.log('GETTING INFO FOR NEW ASSET')
     let url = this.getUrl() + 'api/v1/metadata?object_ids=' + assetId
-    console.log(this._testEnv, url)
     if (groupId){
         // Groups service modifies certain access rights for shared assets
         url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
