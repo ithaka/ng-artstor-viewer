@@ -56,7 +56,6 @@ export class AssetService {
       })
   }
 
-  // TODO: pass error through observable in place of isDataLoaded.error
   /**
    * Gets the metadata for an asset and cleans it into an object with which an Asset can be constructed
    * @param assetId The id of the asset for which to obtain the metadata

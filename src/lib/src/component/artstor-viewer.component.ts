@@ -153,7 +153,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this._assetService.buildAsset(assetId, groupId)
             .subscribe((asset) => {
                 this.asset = asset
-                console.log('SETTING ASSET', this.asset, typeof Asset)
                 this.assetMetadata.emit(asset)
                 this.loadViewer(asset)
             }, (err) => {
