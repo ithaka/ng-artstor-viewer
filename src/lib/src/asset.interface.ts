@@ -10,7 +10,8 @@ export class Asset {
     typeId: number // determines what media type the asset is
     typeName: string // the name correlating to the typeId
     title: string
-    imgURL: string
+    thumbnail_url: string
+    thumbnail_size: number = 3
     kalturaUrl: string
     downloadLink: string
     downloadName: string
@@ -141,7 +142,8 @@ export class Asset {
         this.typeId = data.object_type_id
         this.title = data.title
         this.filePropertiesArray = data.fileProperties
-        this.imgURL = data.thumbnail_url
+        // we control the default size of the thumbnail url
+        this.thumbnail_url = this.replaceThumbnailSize(data.thumbnail_url, this.thumbnail_size)
         this.typeId = data.object_type_id
         this.typeName = this.initTypeName(data.object_type_id)
         this.disableDownload =  data.download_size === '0,0'
@@ -169,7 +171,20 @@ export class Asset {
         if (data.fpxInfo) {
             this.kalturaUrl = data.fpxInfo.imageUrl
         }
-        console.log(this)
+    }
+
+    /**
+     * Sometimes the thumbnail url will not exist and we need to fall back to a different thumbnail size
+     */
+    public fallbackThumbnailUrl(): void {
+        if (this.thumbnail_size > 0) {
+            this.thumbnail_size --
+            this.thumbnail_url = this.replaceThumbnailSize(this.thumbnail_url, this.thumbnail_size)
+        }
+    }
+
+    private replaceThumbnailSize(url: string, size: number): string {
+        return url.replace(/(size)[0-9]/g, 'size' + size)
     }
 }
 

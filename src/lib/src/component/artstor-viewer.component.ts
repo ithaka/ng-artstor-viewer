@@ -47,7 +47,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this._assetService.testEnv = this.testEnv // keep test environment set here
         if (value && value != this._assetId) {
             this._assetId = value
-            console.log('CALLING FOR NEW ASSET')
             this.loadAssetById(this.assetId, this.groupId)
         }
     }
@@ -89,8 +88,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // private fallbackFailed: boolean = false
     private tileSource: string
     private lastZoomValue: number
-    // Thumbanil Size is decremented if load fails (see thumbnailError)
-    private thumbnailSize: number = 2
     // private showCaption: boolean = true
 
     private kalturaUrl: string
@@ -135,10 +132,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
     }
-
-    // private getUrl(): string {
-    //     return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
-    // }
 
     private loadAssetById(assetId: string, groupId: string): void {
         // Destroy previous viewers
@@ -403,34 +396,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         }
     };
 
-    /**
-     * Generate Thumbnail URL
-     */
-    public makeThumbUrl(imagePath: string, size ?: number): string {
-        if (imagePath) {
-            if (size) {
-                imagePath = imagePath.replace(/(size)[0-4]/g, 'size' + size);
-            }
-            // Ensure relative
-            if (imagePath.indexOf('artstor.org') > -1) {
-                imagePath = imagePath.substring(imagePath.indexOf('artstor.org') + 12);
-            }
-
-            if (imagePath[0] != '/') {
-                imagePath = '/' + imagePath;
-            }
-
-            if (imagePath.indexOf('thumb') < 0) {
-                imagePath = '/thumb' + imagePath;
-            }
-        } else {
-            imagePath = '';
-        }
-
-        // Ceanup
-        return (this.testEnv ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + imagePath;
-    }
-
     // Keep: We will want to dynamically load the Kaltura player
     // private getAndLoadKalturaId(data): void {
         // let kalturaId: string;
@@ -471,17 +436,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      */
     private disableContextMenu(event: Event): boolean{
         return false;
-    }
-
-    /**
-     * When thumbnail fails to load, try to load a different size
-     * - Decrements the thumbnail size
-     * - Workaround for missing sizes of particular thumbnails
-     */
-    private thumbnailError(event: Event) : void {
-        if (this.thumbnailSize > 0) {
-            this.thumbnailSize--
-        }
     }
 }
 

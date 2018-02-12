@@ -96,7 +96,7 @@ export class AssetService {
             object_type_id: data.object_type_id,
             resolution_x: data.resolution_x,
             resolution_y: data.resolution_y,
-            thumbnail_url: data.thumbnail_url,
+            thumbnail_url: (this.testEnv ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + data.thumbnail_url,
             tileSourceHostname: this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org',
             title: data.title && data.title !== "" ? data.title : 'Untitled',
             viewer_data: data.viewer_data,

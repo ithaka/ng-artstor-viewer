@@ -19,7 +19,7 @@
     <div class="pano" id="pano-{{ index }}"></div>
   </div>
   <!-- Large thumbnail fallback-->
-  <div id="fallbackViewer" *ngIf="state == 4"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="makeThumbUrl(asset.imgURL, thumbnailSize)" (error)="thumbnailError($event)"></div>
+  <div id="fallbackViewer" *ngIf="state == 4"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="asset.thumbnail_url" (error)="asset.fallbackThumbnailUrl()"></div>
   <!--Viewer Buttons-->
   <div class="button-group asset-viewer__buttons" id="imageButtons-{{ asset.id + '-' + index }}">
     <button class="btn btn--icon" [class.hidden]="state != 1" id="zoomIn-{{ asset.id + '-' + index}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomOut-{{ asset.id + '-' + index }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomFit-{{ asset.id + '-' + index }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ asset.id + '-' + index }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
