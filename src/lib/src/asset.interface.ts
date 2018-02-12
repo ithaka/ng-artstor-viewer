@@ -1,21 +1,20 @@
-// import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { BehaviorSubject, Observable } from 'rxjs/Rx'
 
 // import { AssetService, AuthService } from './../shared';
 import { AssetData, MetadataField, FileProperty } from './asset.service'
 
 export class Asset {
-  id: string;
-  groupId: string;
-  typeId: number; // determines what media type the asset is
+  id: string
+  groupId: string
+  typeId: number // determines what media type the asset is
   typeName: string // the name correlating to the typeId
-  title: string;
-  imgURL: string;
-  kalturaUrl: string;
-  fileExt: string;
-  downloadLink: string;
+  title: string
+  imgURL: string
+  kalturaUrl: string
+  downloadLink: string
   downloadName: string
-  tileSource: string;
+  tileSource: string
   // Not reliably available
   collectionId: number
   SSID: string
@@ -28,8 +27,8 @@ export class Asset {
       center?: any
   } = {}
 
-//   private dataLoadedSource = new BehaviorSubject<boolean>(false);
-//   public isDataLoaded = this.dataLoadedSource.asObservable();
+//   private dataLoadedSource = new BehaviorSubject<boolean>(false)
+//   public isDataLoaded = this.dataLoadedSource.asObservable()
 
   public disableDownload: boolean = false
 
@@ -81,8 +80,8 @@ export class Asset {
             default:
                 if (data.image_url) { //this is a general fallback, but should work specifically for images and video thumbnails
                     let imageServer = 'http://imgserver.artstor.net/' // TODO: check if this should be different for test
-                    let url = imageServer + data.image_url + "?cell=" + data.download_size + "&rgnn=0,0,1,1&cvt=JPEG";
-                    downloadLink = data.baseUrl + "api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url);
+                    let url = imageServer + data.image_url + "?cell=" + data.download_size + "&rgnn=0,0,1,1&cvt=JPEG"
+                    downloadLink = data.baseUrl + "api/download?imgid=" + this.id + "&url=" + encodeURIComponent(url)
                 } else {
                     // nothing happens here because some assets are not allowed to be downloaded
                 }
@@ -145,13 +144,14 @@ export class Asset {
     this.imgURL = data.thumbnail_url
     this.typeId = data.object_type_id
     this.typeName = this.initTypeName(data.object_type_id)
-    // Set Download information // TODO: how is this.fileExt assigned??
-    this.downloadName = this.title.replace(/\./g,'-') + '.' + this.fileExt
     this.disableDownload =  data.download_size === '0,0'
     this.SSID = data.SSID
     this.fileName = data.fileProperties.find((obj) => {
         return !!obj.fileName
     }).fileName
+    // Set Download information // TODO: how is this.fileExt assigned??
+    let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
+    this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
     this.downloadLink = this.buildDownloadLink(data)
     data.viewer_data && (this.viewerData = data.viewer_data)
 
@@ -169,6 +169,7 @@ export class Asset {
     if (data.fpxInfo) {
         this.kalturaUrl = data.fpxInfo.imageUrl
     }
+    console.log(this)
   }
 }
 
