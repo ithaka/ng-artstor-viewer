@@ -44,7 +44,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Required Input
     private _assetId: string = ''
     @Input() set assetId(value: string) {
-        this._assetService.testEnv = this.altHostname.indexOf('stage') > -1 // keep test environment set here
+        this._assetService.testEnv = this.altHostname && this.altHostname.indexOf('stage') > -1 // keep test environment set here
         if (value && value != this._assetId) {
             this._assetId = value
             this.loadAssetById(this.assetId, this.groupId)
