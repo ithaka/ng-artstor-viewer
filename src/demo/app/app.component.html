@@ -4,4 +4,4 @@
 <button (click)="currentId = 'SS34216_34216_38871584'">Audio (Kaltura)</button>
 <button (click)="currentId = 'SS34216_34216_38536370'">Converted panorama (Pano)</button>
 <button (click)="currentId = 'SS34216_34216_38866586'">Doc (Thumbnail)</button>
-<artstor-viewer [assetId]="currentId" [testEnv]="true" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+<artstor-viewer [assetId]="currentId" [altHostname]="'//stage.artstor.org/'" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>

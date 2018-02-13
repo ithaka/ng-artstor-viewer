@@ -39,12 +39,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() isFullscreen: boolean
     @Input() showCaption: boolean
     @Input() quizMode: boolean
-    @Input() testEnv: boolean
+    @Input() altHostname: string
 
     // Required Input
     private _assetId: string = ''
     @Input() set assetId(value: string) {
-        this._assetService.testEnv = this.testEnv // keep test environment set here
+        this._assetService.testEnv = this.altHostname.indexOf('stage') > -1 // keep test environment set here
         if (value && value != this._assetId) {
             this._assetId = value
             this.loadAssetById(this.assetId, this.groupId)
