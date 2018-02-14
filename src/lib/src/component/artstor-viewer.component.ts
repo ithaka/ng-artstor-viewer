@@ -6,6 +6,7 @@ import * as OpenSeadragon from 'openseadragon';
 import '../viewers/krpano.js';
 // Internal Dependencies
 import { Asset } from "../asset.interface"
+import { AssetService } from '../asset.service'
 
 // Browser API delcarations
 declare var ActiveXObject: any
@@ -22,24 +23,10 @@ enum viewState {
 
 @Component({
   selector: 'artstor-viewer',
-  providers: [],
   templateUrl: './artstor-viewer.component.html',
   styleUrls: ['./artstor-viewer.component.css']
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
-
-    // Required Input
-    private _assetId: string = ''
-    @Input() set assetId(value: string) {
-        if (value != this._assetId) {
-            this._assetId = value
-            this.loadAssetById()
-        }
-    }
-    get assetId(): string {
-        // other logic
-        return this._assetId
-    }
 
     // Optional Inputs
     @Input() groupId: string
@@ -54,6 +41,36 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() quizMode: boolean
     @Input() altHostname: string
 
+    // Required Input
+    private _assetId: string = ''
+    @Input() set assetId(value: string) {
+        this._assetService.testEnv = this.altHostname && this.altHostname.indexOf('stage') > -1 // keep test environment set here
+        if (value && value != this._assetId) {
+            this._assetId = value
+            this.loadAssetById(this.assetId, this.groupId)
+        }
+    }
+    get assetId(): string {
+        // other logic
+        return this._assetId
+    }
+    get asset(): Asset {
+        if (this._asset) {
+            return this._asset
+        } else {
+            // this super weird bad-feeling thing is because, for some reason, the template
+            //  *ngIf="asset" always thought asset was undefined, and if we left it off we'd
+            //  get errors saying "cannot read property 'id' of undefined"
+            //  so this is a simple getter/setter combo which will initially provide an empty
+            //  object, but an empty object should not be assignable here at any point in the future
+            //  because this coercive casting is a bad pattern
+            return <Asset>{}
+        }
+    }
+    set asset(asset: Asset) {
+        this._asset = asset
+    }
+
     // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
     @Output() nextPage = new EventEmitter()
@@ -63,7 +80,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
-    private asset: Asset
+    private _asset: Asset
     private assetSub: Subscription
     private state: viewState = viewState.loading
     private removableAsset: boolean = false
@@ -71,15 +88,15 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // private fallbackFailed: boolean = false
     private tileSource: string
     private lastZoomValue: number
-    // Thumbanil Size is decremented if load fails (see thumbnailError)
-    private thumbnailSize: number = 2
     // private showCaption: boolean = true
 
     private kalturaUrl: string
     private osdViewer: any
+    private osdViewerId: string
 
     constructor(
-        private _http: HttpClient
+        private _http: HttpClient, // TODO: move _http into a service
+        private _assetService: AssetService
     ) { 
         if(!this.index) {
             this.index = 0
@@ -87,7 +104,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        this.loadAssetById()
         // Assets don't initialize with fullscreen variable
         // And assets beyond the first/primary only show in fullscreen
         if (this.index > 0) {
@@ -115,47 +131,31 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-
     }
 
-    private getUrl(): string {
-        return this.altHostname ? this.altHostname : '//library.artstor.org/'
-    }
-
-    private loadAssetById(): void {
+    private loadAssetById(assetId: string, groupId: string): void {
         // Destroy previous viewers
         if (this.osdViewer) {
             this.osdViewer.destroy()
         }
+        // change id for new viewer
+        this.osdViewerId = 'osd-' + assetId + '-' + this.index
         // Set viewer to "loading"
         this.state = viewState.loading
-        // Construct new/replacement asset
-        if (this.groupId) {
-            // Pass groupid if asset is loaded via a group
-            this.asset = new Asset(this.assetId, this._http, this.altHostname, this.groupId)
-        } else {
-            this.asset = new Asset(this.assetId, this._http, this.altHostname)
-        }
         
-        if (this.assetSub) {
-            this.assetSub.unsubscribe()
-        }
-
-        this.assetSub = this.asset.isDataLoaded.subscribe(
-            loaded => {
-                if (loaded) {
-                    this.assetMetadata.emit(this.asset)
-                    this.loadViewer()
-                }
-            },
-            error => {
-                this.assetMetadata.emit({error: error})
+        this._assetService.buildAsset(assetId, groupId)
+            .subscribe((asset) => {
+                this.asset = asset
+                this.assetMetadata.emit(asset)
+                this.loadViewer(asset)
+            }, (err) => {
+                this.assetMetadata.emit({ error: err })
             })
     }
 
-    private loadViewer(): void {
+    private loadViewer(asset: Asset): void {
         // Object types that need loaders
-        switch (this.asset.typeName()) {
+        switch (asset.typeName) {
             default:
                 // Display thumbnail
                 this.state = viewState.thumbnailFallback
@@ -183,7 +183,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * Gets information needed to load IIIF viewers, such as OpenSeaDragon
      */
     private loadIIIF(): void {
-        console.log("LOAD IIIF")
         if (this.asset.tileSource) {
             this.tileSource = this.asset.tileSource
             this.loadOpenSea()
@@ -200,11 +199,10 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
-        let id =  this.asset.id + '-' + this.index;
         this.osdViewer = new OpenSeadragon({
-            id: 'osd-' + id,
+            id: this.osdViewerId,
             // prefix for Icon Images
-            prefixUrl: this.getUrl() + 'assets/img/osd/',
+            prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
             gestureSettingsMouse: {
                 scrollToZoom: true,
@@ -212,9 +210,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             },
             controlsFadeLength: 500,
             //   debugMode: true,
-            zoomInButton: 'zoomIn-' + id,
-            zoomOutButton: 'zoomOut-' + id,
-            homeButton: 'zoomFit-' + id,
+            zoomInButton: 'zoomIn-' + this.osdViewerId,
+            zoomOutButton: 'zoomOut-' + this.osdViewerId,
+            homeButton: 'zoomFit-' + this.osdViewerId,
             sequenceMode: true,
             initialPage: 0,
             nextButton: 'nextButton',
@@ -398,34 +396,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         }
     };
 
-    /**
-     * Generate Thumbnail URL
-     */
-    public makeThumbUrl(imagePath: string, size ?: number): string {
-        if (imagePath) {
-            if (size) {
-                imagePath = imagePath.replace(/(size)[0-4]/g, 'size' + size);
-            }
-            // Ensure relative
-            if (imagePath.indexOf('artstor.org') > -1) {
-                imagePath = imagePath.substring(imagePath.indexOf('artstor.org') + 12);
-            }
-
-            if (imagePath[0] != '/') {
-                imagePath = '/' + imagePath;
-            }
-
-            if (imagePath.indexOf('thumb') < 0) {
-                imagePath = '/thumb' + imagePath;
-            }
-        } else {
-            imagePath = '';
-        }
-
-        // Ceanup
-        return ((this.altHostname && this.altHostname.indexOf('stage') > -1) ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + imagePath;
-    }
-
     // Keep: We will want to dynamically load the Kaltura player
     // private getAndLoadKalturaId(data): void {
         // let kalturaId: string;
@@ -466,17 +436,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      */
     private disableContextMenu(event: Event): boolean{
         return false;
-    }
-
-    /**
-     * When thumbnail fails to load, try to load a different size
-     * - Decrements the thumbnail size
-     * - Workaround for missing sizes of particular thumbnails
-     */
-    private thumbnailError(event: Event) : void {
-        if (this.thumbnailSize > 0) {
-            this.thumbnailSize--
-        }
     }
 }
 

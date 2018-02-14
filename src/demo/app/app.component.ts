@@ -7,7 +7,7 @@ import { ArtstorViewer } from 'artstor-viewer';
 })
 export class AppComponent {
   meaning: number;
-  currentId: string = "SS34216_34216_38866586"
+  currentId: string = "AWSS35953_35953_33681116"
 
   constructor(libService: ArtstorViewer) {
     // this.meaning = libService.getMeaning();
