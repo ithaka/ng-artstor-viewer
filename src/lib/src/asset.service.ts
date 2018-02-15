@@ -23,7 +23,12 @@ export class AssetService {
   }
 
   public getUrl(): string {
-    return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    let useRelative: boolean = window.location.hostname.indexOf('artstor') > -1
+    if (useRelative) {
+      return '/'
+    } else {
+      return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    }
   }
 
   get testEnv(): boolean {
