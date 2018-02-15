@@ -23,7 +23,7 @@ export class AssetService {
   }
 
   public getUrl(): string {
-    let useRelative: boolean = window.location.hostname.indexOf('artstor') > -1
+    let useRelative: boolean = window.location.hostname.indexOf('artstor.org') > -1
     if (useRelative) {
       return '/'
     } else {
