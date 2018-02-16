@@ -116,16 +116,16 @@ export class Asset {
     }
 
     get creator(): string {
-        return this.formattedMetadata.Creator[0] || ''
+        return (this.formattedMetadata.Creator && this.formattedMetadata.Creator[0]) || ''
     }
     get date(): string {
-        return this.formattedMetadata.Date[0] || ''
+        return (this.formattedMetadata.Date && this.formattedMetadata.Date[0]) || ''
     }
     get description(): string {
-        return this.formattedMetadata.Description[0] || ''
+        return (this.formattedMetadata.Description && this.formattedMetadata.Description[0]) || ''
     }
     get collectionName(): string {
-        return this.formattedMetadata.Collection[0] || ''
+        return (this.formattedMetadata.Collection && this.formattedMetadata.Collection[0]) || ''
     }
 
     /**
