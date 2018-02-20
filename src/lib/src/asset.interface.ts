@@ -17,9 +17,10 @@ export class Asset {
     downloadName: string
     tileSource: string
     // Not reliably available
+    categoryId: string
     categoryName: string
-    categoryId: number
-    collectionId: number
+    collectionId: string
+    collectionName: string
     SSID: string
     fileName: string
 
@@ -126,9 +127,6 @@ export class Asset {
     get description(): string {
         return (this.formattedMetadata.Description && this.formattedMetadata.Description[0]) || ''
     }
-    get collectionName(): string {
-        return (this.formattedMetadata.Collection && this.formattedMetadata.Collection[0]) || ''
-    }
 
     /**
      * Sets up the Asset object with needed properties
@@ -143,6 +141,10 @@ export class Asset {
         this.id = data.object_id
         this.typeId = data.object_type_id
         this.title = data.title
+        this.categoryId = data.category_id
+        this.categoryName = data.category_name
+        this.collectionId = data.collection_id
+        this.collectionName = data.collection_name
         this.filePropertiesArray = data.fileProperties
         // we control the default size of the thumbnail url
         this.thumbnail_url = this.replaceThumbnailSize(data.thumbnail_url, this.thumbnail_size)
