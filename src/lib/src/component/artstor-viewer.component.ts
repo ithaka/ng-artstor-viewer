@@ -40,11 +40,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() showCaption: boolean
     @Input() quizMode: boolean
     @Input() testEnv: boolean
+    @Input() encrypted: boolean
 
     // Required Input
     private _assetId: string = ''
     @Input() set assetId(value: string) {
         this._assetService.testEnv = this.testEnv // keep test environment set here
+        this._assetService.encrypted = this.encrypted
         if (value && value != this._assetId) {
             this._assetId = value
             this.loadAssetById(this.assetId, this.groupId)
