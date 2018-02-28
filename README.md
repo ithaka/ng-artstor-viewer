@@ -13,6 +13,11 @@ Using this repo:
 - `yarn run integration` to run the integration e2e tests
 - `yarn install ./relative/path/to/lib` after `yarn run build` to test locally in another app
 
+To publish a new version:
+- `yarn release` to increment version
+- `yarn build` to build with new version
+- `yarn publish dist` to publish to yarn/npm
+
 If you need to debug the integration app, please check `./integration/README.md`.
 
 ## The Demo App
