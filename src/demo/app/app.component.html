@@ -6,6 +6,6 @@
 <button (click)="currentId = 'SS34216_34216_38866586'; isEncrypted = false">Doc (Thumbnail)</button>
 <button (click)="currentId = '8DtZYyMmJloyLyw5ej1/Rnwu'; isEncrypted = true">Kress (Encrypted ID/IIIF)</button>
 
-<button (click)="useThumbnail = !useThumbnail" style="margin-top: 30px;">Toggle Forced Thumbnail Mode</button> Current Value: {{ useThumbnail }}
+<button (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Toggle Forced Thumbnail Mode</button> Current Value: {{ useThumbnail }}
 
 <artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="false" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
