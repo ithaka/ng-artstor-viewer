@@ -18,7 +18,10 @@ export class Asset {
     tileSource: string
     collectionType: number
     // Not reliably available
-    collectionId: number
+    categoryId: string
+    categoryName: string
+    collectionId: string
+    collectionName: string
     SSID: string
     fileName: string
 
@@ -117,16 +120,13 @@ export class Asset {
     }
 
     get creator(): string {
-        return this.formattedMetadata.Creator[0] || ''
+        return (this.formattedMetadata.Creator && this.formattedMetadata.Creator[0]) || ''
     }
     get date(): string {
-        return this.formattedMetadata.Date[0] || ''
+        return (this.formattedMetadata.Date && this.formattedMetadata.Date[0]) || ''
     }
     get description(): string {
-        return this.formattedMetadata.Description[0] || ''
-    }
-    get collectionName(): string {
-        return this.formattedMetadata.Collection[0] || ''
+        return (this.formattedMetadata.Description && this.formattedMetadata.Description[0]) || ''
     }
 
     /**
@@ -142,6 +142,10 @@ export class Asset {
         this.id = data.object_id
         this.typeId = data.object_type_id
         this.title = data.title
+        this.categoryId = data.category_id
+        this.categoryName = data.category_name
+        this.collectionId = data.collection_id
+        this.collectionName = data.collection_name
         this.filePropertiesArray = data.fileProperties
         this.collectionType = data.collection_type
         // we control the default size of the thumbnail url

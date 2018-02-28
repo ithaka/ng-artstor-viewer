@@ -1,8 +1,11 @@
 <h3>Sample assets:</h3>
-<button (click)="currentId = 'ARTSTOR_103_41822003761960'">Basquiat (IIIF)</button>
-<button (click)="currentId = 'SS7729485_7729485_25712578'">Slab City (Kaltura)</button>
-<button (click)="currentId = 'SS34216_34216_38871584'">Audio (Kaltura)</button>
-<button (click)="currentId = 'SS34216_34216_38536370'">Converted panorama (Pano)</button>
-<button (click)="currentId = 'SS34216_34216_38866586'">Doc (Thumbnail)</button>
+<button (click)="currentId = 'ARTSTOR_103_41822003761960'; isEncrypted = false">Basquiat (IIIF)</button>
+<button (click)="currentId = 'SS7729485_7729485_25712578'; isEncrypted = false">Slab City (Kaltura)</button>
+<button (click)="currentId = 'SS34216_34216_38871584'; isEncrypted = false">Audio (Kaltura)</button>
+<button (click)="currentId = 'SS34216_34216_38536370'; isEncrypted = false">Converted panorama (Pano)</button>
+<button (click)="currentId = 'SS34216_34216_38866586'; isEncrypted = false">Doc (Thumbnail)</button>
+<button (click)="currentId = '8DtZYyMmJloyLyw5ej1/Rnwu'; isEncrypted = true">Kress (Encrypted ID/IIIF)</button>
+
 <button (click)="useThumbnail = !useThumbnail" style="margin-top: 30px;">Toggle Forced Thumbnail Mode</button> Current Value: {{ useThumbnail }}
-<artstor-viewer [assetId]="currentId" [testEnv]="true" [thumbnailMode]="useThumbnail" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+
+<artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="false" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>

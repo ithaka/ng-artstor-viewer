@@ -15,7 +15,8 @@ import { Asset } from './asset.interface'
 @Injectable()
 export class AssetService {
 
-  private _testEnv: boolean = false
+  public testEnv: boolean = false
+  public encrypted: boolean = false
 
   constructor(
     private _http: HttpClient
@@ -31,17 +32,14 @@ export class AssetService {
     }
   }
 
-  get testEnv(): boolean {
-    return this._testEnv
-  }
-  set testEnv(env: boolean) {
-    this._testEnv = env
-  }
-
-
   public buildAsset(assetId: string, groupId?: string): Observable<Asset> {
-    return this.getMetadata(assetId, groupId)
-      .flatMap((assetData) => {
+    let metadataObservable
+    if (this.encrypted) {
+      metadataObservable = this.getEncryptedMetadata(assetId)
+    } else {
+      metadataObservable = this.getMetadata(assetId, groupId)
+    }
+    return metadataObservable.flatMap((assetData) => {
 
         // do we need to make an imageFpx call to get kaltura data??
         switch (assetData.object_type_id) {
@@ -70,7 +68,7 @@ export class AssetService {
     let url = this.getUrl() + 'api/v1/metadata?object_ids=' + assetId
     if (groupId){
         // Groups service modifies certain access rights for shared assets
-        url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + assetId
+        url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + encodeURIComponent(assetId) 
     }
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
@@ -80,13 +78,42 @@ export class AssetService {
             throw new Error('Unable to load metadata!')
           }
           let data: AssetDataResponse = res.metadata[0]
+          let assetData: AssetData = this.mapMetadata(data)
+          if (groupId) {
+            assetData.groupId = groupId
+          }
+          return assetData
+        })
+  }
 
-          // although this seems repetitive/wordy, it gives us insulation from server name changes because we
-          //  have a single place to update the naming of any property, resolve types and make changes to data shape
-          // defaults which should otherwise be default values returned by the service can also be assigned here
-          let assetData: AssetData = {
+  /**
+     * Call to API which returns an asset, given an encrypted_id
+     * @param token The encrypted token that you want to know the asset id for
+     */
+  public getEncryptedMetadata(secretId: string): Observable<any> {
+    let headers: HttpHeaders = new HttpHeaders({ fromKress: 'true'})
+
+    return this._http
+      .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId), { headers: headers })
+      .map((res) => {
+          if (!res.metadata[0]) {
+            throw new Error('Unable to load metadata via encrypted id!')
+          }
+          let data: AssetDataResponse = res.metadata[0]
+          let assetData: AssetData = this.mapMetadata(data)
+          return assetData
+      })
+  }
+
+  /**
+   * Convenience Mapper
+   * although this seems repetitive/wordy, it gives us insulation from server name changes because we
+   * have a single place to update the naming of any property, resolve types and make changes to data shape
+   * defaults which should otherwise be default values returned by the service can also be assigned here
+   */
+  private mapMetadata(data: any) : AssetData {
+    return {
             object_id: data.object_id,
-            groupId: groupId,
             SSID: data.SSID,
             category_id: data.category_id,
             category_name: data.category_name,
@@ -108,9 +135,7 @@ export class AssetService {
             width: data.width,
             baseUrl: this.getUrl()
           }
-          return assetData
-        })
-  }
+  } 
 
   /**
    * Gets the relevant Kaltura info for an asset - should only be used when necessary
