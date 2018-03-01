@@ -34,7 +34,8 @@
     "integration:jit": "cd integration && npm run e2e",
     "integration:aot": "cd integration && npm run e2e:aot",
     "lint": "tslint ./src/**/*.ts -t verbose",
-    "release": "standard-version"
+    "release": "standard-version",
+    "launch": "yarn release && yarn build && npm publish dist"
   },
   "peerDependencies": {
     "@angular/core": ">=5.0.0 <6.0.0"
