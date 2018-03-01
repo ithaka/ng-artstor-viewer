@@ -8,6 +8,7 @@ import { ArtstorViewer } from 'artstor-viewer';
 export class AppComponent {
   meaning: number;
   currentId: string = "AWSS35953_35953_33681116"
+  useThumbnail: boolean = false
   isEncrypted: boolean = false
 
   constructor(libService: ArtstorViewer) {

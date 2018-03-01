@@ -40,6 +40,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() showCaption: boolean
     @Input() quizMode: boolean
     @Input() testEnv: boolean
+    @Input() thumbnailMode: boolean
     @Input() encrypted: boolean
 
     // Required Input
@@ -156,11 +157,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private loadViewer(asset: Asset): void {
+
+        // Display thumbnail
+        this.state = viewState.thumbnailFallback
+        if (this.thumbnailMode) { return } // leave state on thumbnail if thumbnail mode is triggered
+
         // Object types that need loaders
         switch (asset.typeName) {
-            default:
-                // Display thumbnail
-                this.state = viewState.thumbnailFallback
             case 'image':
                 // Image, try IIF
                 this.loadIIIF();

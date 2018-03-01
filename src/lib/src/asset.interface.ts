@@ -16,6 +16,7 @@ export class Asset {
     downloadLink: string
     downloadName: string
     tileSource: string
+    collectionType: number
     // Not reliably available
     categoryId: string
     categoryName: string
@@ -146,6 +147,7 @@ export class Asset {
         this.collectionId = data.collection_id
         this.collectionName = data.collection_name
         this.filePropertiesArray = data.fileProperties
+        this.collectionType = data.collection_type
         // we control the default size of the thumbnail url
         this.thumbnail_url = this.replaceThumbnailSize(data.thumbnail_url, this.thumbnail_size)
         this.typeId = data.object_type_id
