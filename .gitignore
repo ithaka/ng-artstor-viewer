@@ -4,6 +4,7 @@ node_modules/
 out-tsc/
 debug.log
 npm-debug.log
+yarn-error.log
 src/**/*.js
 !src/lib/src/viewers/*.js
 !src/demo/systemjs.config.js
