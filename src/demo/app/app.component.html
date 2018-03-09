@@ -10,15 +10,15 @@
             <button class="btn btn-secondary" (click)="currentId = '8DtZYyMmJloyLyw5ej1/Rnwu'; isEncrypted = true">Kress (Encrypted ID/IIIF)</button>
             <hr/>
             <h4>Options:</h4>
-            <button class="btn btn-secondary" (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Toggle Forced Thumbnail Mode</button> 
-            <pre>Forced Thumbnail: {{ useThumbnail }}</pre>
+            <button class="btn btn-secondary" (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Forced Thumbnail Mode: {{ useThumbnail }}</button> 
+            <button class="btn btn-secondary" (click)="testEnv = !testEnv" style="display: block; margin-top: 15px;">Test Environment: {{ testEnv }}</button> 
             <hr/>
             <h4>Actions:</h4>
             <a class="btn btn-secondary" [attr.href]="downloadLink" download>Download Asset</a>
         </div>
         <div class="col-md-8">
             <h4>Viewer:</h4>
-            <artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="false" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+            <artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="testEnv" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
         </div>
     </div>
 </div>
