@@ -1,11 +1,24 @@
-<h3>Sample assets:</h3>
-<button (click)="currentId = 'ARTSTOR_103_41822003761960'; isEncrypted = false">Basquiat (IIIF)</button>
-<button (click)="currentId = 'SS7729485_7729485_25712578'; isEncrypted = false">Slab City (Kaltura)</button>
-<button (click)="currentId = 'SS34216_34216_38871584'; isEncrypted = false">Audio (Kaltura)</button>
-<button (click)="currentId = 'SS34216_34216_38536370'; isEncrypted = false">Converted panorama (Pano)</button>
-<button (click)="currentId = 'SS34216_34216_38866586'; isEncrypted = false">Doc (Thumbnail)</button>
-<button (click)="currentId = '8DtZYyMmJloyLyw5ej1/Rnwu'; isEncrypted = true">Kress (Encrypted ID/IIIF)</button>
-
-<button (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Toggle Forced Thumbnail Mode</button> Current Value: {{ useThumbnail }}
-
-<artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="false" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4" style="background:#fafafa;">
+            <h4>Sample Assets:</h4>
+            <button class="btn btn-secondary" (click)="currentId = 'ARTSTOR_103_41822003761960'; isEncrypted = false">Basquiat (IIIF)</button>
+            <button class="btn btn-secondary" (click)="currentId = 'SS7729485_7729485_25712578'; isEncrypted = false">Slab City (Kaltura)</button>
+            <button class="btn btn-secondary" (click)="currentId = 'SS34216_34216_38871584'; isEncrypted = false">Audio (Kaltura)</button>
+            <button class="btn btn-secondary" (click)="currentId = 'SS34216_34216_38536370'; isEncrypted = false">Converted panorama (Pano)</button>
+            <button class="btn btn-secondary" (click)="currentId = 'SS34216_34216_39583352'; isEncrypted = false">Doc (Thumbnail)</button>
+            <button class="btn btn-secondary" (click)="currentId = '8DtZYyMmJloyLyw5ej1/Rnwu'; isEncrypted = true">Kress (Encrypted ID/IIIF)</button>
+            <hr/>
+            <h4>Options:</h4>
+            <button class="btn btn-secondary" (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Toggle Forced Thumbnail Mode</button> 
+            <pre>Forced Thumbnail: {{ useThumbnail }}</pre>
+            <hr/>
+            <h4>Actions:</h4>
+            <a class="btn btn-secondary" [attr.href]="downloadLink" download>Download Asset</a>
+        </div>
+        <div class="col-md-8">
+            <h4>Viewer:</h4>
+            <artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="false" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+        </div>
+    </div>
+</div>

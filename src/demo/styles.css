@@ -1,5 +1,60 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 14px;
+}
+
 h1 {
   color: #369;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 250%;
+}
+
+h4 {
+  margin-top: 1em !important;
+}
+
+.btn .icon {
+  height: 18px;
+  width: 18px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 100% auto;
+}
+
+.btn-secondary {
+  margin-bottom: 3px;
+}
+
+.btn.btn--icon {
+  position: relative;
+  cursor: pointer;
+  border-radius: 0px;
+  height: 30px;
+  width: 30px;
+  margin: 0;
+  background: rgba(255,255,255,0.98);
+  color: #333;
+  box-shadow: none;
+  padding: 0px;
+  text-align: center;
+  border: none;
+}
+
+.icon-zoom-out {
+  background-image: url(//library.artstor.org/assets/img/icon-zoom-out.svg);
+}
+
+.icon-zoom-in {
+  background-image: url(//library.artstor.org/assets/img/icon-zoom-in.svg);
+}
+
+.icon-fit {
+  background-image: url(//library.artstor.org/assets/img/icon-fit.svg);
+}
+
+.icon-fullscreen {
+  background-image: url(//library.artstor.org/assets/img/icon-fullscreen.svg);
 }

@@ -10,6 +10,7 @@ export class AppComponent {
   currentId: string = "AWSS35953_35953_33681116"
   useThumbnail: boolean = false
   isEncrypted: boolean = false
+  downloadLink: string = ""
 
   constructor(libService: ArtstorViewer) {
     // this.meaning = libService.getMeaning();
@@ -17,5 +18,6 @@ export class AppComponent {
 
   handleLoadedMetadata(assetData) {
     console.log(assetData)
+    this.downloadLink = assetData.downloadLink
   }
 }

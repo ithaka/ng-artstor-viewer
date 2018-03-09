@@ -16,9 +16,7 @@ Using this repo:
 To publish a new version:
 - `yarn release` to increment version
 - `yarn build` to build with new version
-- `yarn publish dist` to publish to yarn/npm
-
-If you need to debug the integration app, please check `./integration/README.md`.
+- `npm publish dist` to publish to yarn/npm
 
 ## The Demo App
 Used to test the viewer, and provides multiple asset ids to test different use cases.
