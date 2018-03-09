@@ -80,7 +80,8 @@ export class Asset {
             case 21:
             case 22:
             case 23:
-                downloadLink = [data.baseUrl + 'media', data.object_type_id, this.id].join("/")
+                // Non-image Download Link format: /media/ARTSTORID/TYPEID
+                downloadLink = [data.baseUrl + 'media', this.id, data.object_type_id].join("/")
                 break
             default:
                 if (data.image_url) { //this is a general fallback, but should work specifically for images and video thumbnails
