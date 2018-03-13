@@ -24,11 +24,29 @@ export class AssetService {
   }
 
   public getUrl(): string {
-    let useRelative: boolean = window.location.hostname.indexOf('artstor.org') > -1
-    if (useRelative) {
-      return '/'
-    } else {
+    /** 
+     * Example URLs viewer could be hosted on, and expected endpoint route:
+     * - library.artstor.org                     --> /
+     * - stage.artstor.org                       --> /
+     * - sahara.artstor.org                      --> /
+     * - ezproxy-prd.bodleian.ox.ac.uk:3051      --> /
+     * - library.artstor.org.luna.wellesley.edu  --> /
+     * - localhost                               --> //stage.artstor.org/
+     * - ang-ui.apps.prod.cirrostratus.org       --> //library.artstor.org/
+     * - jstor.org                               --> //library.artstor.org/
+    */
+    let nonRelativeDomains = [
+      "localhost",
+      "ang-ui.apps.prod.cirrostratus.org",
+      "ang-ui.apps.test.cirrostratus.org",
+      "www.jstor.org"
+    ]
+    // If it's a non-relative domain, use an explicit domain for api calls
+    let useDomain: boolean = new RegExp(nonRelativeDomains.join("|")).test(document.location.hostname)
+    if (useDomain) {
       return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+    } else {
+      return '/'
     }
   }
 
