@@ -202,6 +202,7 @@ export interface AssetData {
   thumbnail_url: string
   tileSourceHostname: string
   title: string
+  updated_on: string
   viewer_data?: {
       base_asset_url?: string,
       panorama_xml?: string

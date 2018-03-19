@@ -24,6 +24,7 @@ export class Asset {
     collectionName: string
     SSID: string
     fileName: string
+    updated_on: string
 
     viewportDimensions: {
         contentSize?: any,
@@ -158,6 +159,7 @@ export class Asset {
         this.fileName = data.fileProperties.find((obj) => {
             return !!obj.fileName
         }).fileName
+        this.updated_on = data.updated_on
         // Set Download information
         let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
         this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
