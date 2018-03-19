@@ -149,6 +149,7 @@ export class AssetService {
             thumbnail_url: (this.testEnv ? '//mdxstage.artstor.org' : '//mdxdv.artstor.org') + data.thumbnail_url,
             tileSourceHostname: this.testEnv ? '//tsstage.artstor.org' : '//tsprod.artstor.org',
             title: data.title && data.title !== "" ? data.title : 'Untitled',
+            updated_on: data.updated_on,
             viewer_data: data.viewer_data,
             width: data.width,
             baseUrl: this.getUrl()
