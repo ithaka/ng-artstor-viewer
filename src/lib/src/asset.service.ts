@@ -231,6 +231,7 @@ interface AssetDataResponse {
   resolution_y: number
   thumbnail_url: string
   title: string
+  updated_on: string
   viewer_data: {
     base_asset_url?: string,
     panorama_xml?: string

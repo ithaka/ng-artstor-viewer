@@ -78,6 +78,7 @@
   },
   "dependencies": {
     "@angular/http": "^5.2.0",
+    "npm": "^5.7.1",
     "openseadragon": "^2.3.1"
   }
 }
