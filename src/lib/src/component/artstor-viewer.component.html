@@ -21,15 +21,17 @@
   <!-- Large thumbnail fallback-->
   <div id="fallbackViewer" *ngIf="state == 4"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="asset.thumbnail_url" (error)="asset.fallbackThumbnailUrl()"></div>
   <!--Viewer Buttons-->
-  <div class="button-group asset-viewer__buttons" id="imageButtons-{{ osdViewerId }}">
-    <button class="btn btn--icon" [class.hidden]="state != 1" id="zoomIn-{{ osdViewerId}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomOut-{{ osdViewerId }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomFit-{{ osdViewerId }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ osdViewerId }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
-  </div>
-  <div class="fullscreen-metadata" *ngIf="isFullscreen" [class.slideAway]="!showCaption">
-    <div class="vertical-center-wrap"><i class="icon icon-direction icon-left" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber <= 1" title="Previous in results" (click)="prevPage.emit()"></i>
-      <div class="title" [innerHtml]="asset.title"></div><i class="icon icon-direction icon-right" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber >= assetGroupCount" title="Next in results" (click)="nextPage.emit()"></i>
-      <div class="meta-block small">
-        <div class="creator" [innerHtml]="asset.creator"></div>
-        <div class="date" [innerHtml]="asset.date"></div>
+  <div *ngIf="!thumbnailMode">
+    <div class="button-group asset-viewer__buttons" id="imageButtons-{{ osdViewerId }}">
+      <button class="btn btn--icon" [class.hidden]="state != 1" id="zoomIn-{{ osdViewerId}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomOut-{{ osdViewerId }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomFit-{{ osdViewerId }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ osdViewerId }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
+    </div>
+    <div class="fullscreen-metadata" *ngIf="isFullscreen" [class.slideAway]="!showCaption">
+      <div class="vertical-center-wrap"><i class="icon icon-direction icon-left" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber <= 1" title="Previous in results" (click)="prevPage.emit()"></i>
+        <div class="title" [innerHtml]="asset.title"></div><i class="icon icon-direction icon-right" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber >= assetGroupCount" title="Next in results" (click)="nextPage.emit()"></i>
+        <div class="meta-block small">
+          <div class="creator" [innerHtml]="asset.creator"></div>
+          <div class="date" [innerHtml]="asset.date"></div>
+        </div>
       </div>
     </div>
   </div>
