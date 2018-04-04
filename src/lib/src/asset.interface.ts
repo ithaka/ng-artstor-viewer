@@ -2,7 +2,7 @@
 import { BehaviorSubject, Observable } from 'rxjs/Rx'
 
 // import { AssetService, AuthService } from './../shared';
-import { AssetData, MetadataField, FileProperty } from './asset.service'
+import { AssetData, MetadataField, FileProperty, CollectionValue } from './asset.service'
 
 export class Asset {
     id: string
@@ -20,6 +20,7 @@ export class Asset {
     // Not reliably available
     categoryId: string
     categoryName: string
+    collections: CollectionValue[]
     collectionId: string
     collectionName: string
     SSID: string
@@ -146,6 +147,7 @@ export class Asset {
         this.title = data.title
         this.categoryId = data.category_id
         this.categoryName = data.category_name
+        this.collections = data.collections
         this.collectionId = data.collection_id
         this.collectionName = data.collection_name
         this.filePropertiesArray = data.fileProperties

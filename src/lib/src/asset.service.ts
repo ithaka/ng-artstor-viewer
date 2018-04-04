@@ -135,6 +135,7 @@ export class AssetService {
             SSID: data.SSID,
             category_id: data.category_id,
             category_name: data.category_name,
+            collections: data.collections,
             collection_id: data.collection_id,
             collection_name: data.collection_name,
             collection_type: data.collection_type,
@@ -188,6 +189,7 @@ export interface AssetData {
   SSID?: string
   category_id: string
   category_name: string
+  collections: CollectionValue[]
   collection_id: string
   collection_name: string
   collection_type: number
@@ -246,6 +248,12 @@ export interface MetadataField {
   fieldValue: string
   index: number
   link?: string
+}
+
+export interface CollectionValue {
+  type: string
+  name: string
+  id: string
 }
 
 export interface ImageFPXResponse {
