@@ -139,6 +139,7 @@ export class AssetService {
             collection_id: data.collection_id,
             collection_name: data.collection_name,
             collection_type: data.collection_type,
+            contributinginstitutionid: data.contributinginstitutionid,
             download_size: data.downloadSize || data.download_size || '1024,1024',
             fileProperties: data.fileProperties || [],
             height: data.height,
@@ -193,6 +194,7 @@ export interface AssetData {
   collection_id: string
   collection_name: string
   collection_type: number
+  contributinginstitutionid: number
   download_size: string
   fileProperties: FileProperty[] // array of objects with a key/value pair
   height: number
@@ -206,6 +208,7 @@ export interface AssetData {
   tileSourceHostname: string
   title: string
   updated_on: string
+
   viewer_data?: {
       base_asset_url?: string,
       panorama_xml?: string
@@ -222,6 +225,7 @@ interface AssetDataResponse {
   collection_id: string
   collection_name: string
   collection_type: number
+  contributinginstitutionid: number
   downloadSize?: string
   download_size?: string
   fileProperties: { [key: string]: string }[] // array of objects with a key/value pair
