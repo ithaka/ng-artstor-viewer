@@ -32,11 +32,13 @@ export class AssetService {
      * - ezproxy-prd.bodleian.ox.ac.uk:3051      --> /
      * - library.artstor.org.luna.wellesley.edu  --> /
      * - localhost                               --> //stage.artstor.org/
+     * - local.artstor.org                       --> //stage.artstor.org/
      * - ang-ui.apps.prod.cirrostratus.org       --> //library.artstor.org/
      * - jstor.org                               --> //library.artstor.org/
     */
     let nonRelativeDomains = [
       "localhost",
+      "local.",
       "ang-ui.apps.prod.cirrostratus.org",
       "ang-ui.apps.test.cirrostratus.org",
       "www.jstor.org"
