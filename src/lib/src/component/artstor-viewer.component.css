@@ -100,10 +100,10 @@ $desktop: 992px;*/
     padding: 0px;
 }
 .asset-viewer.fullscreen .item  {
-    position: absolute !important;
+    /* position: absolute !important; */
     width: 100%;
-    height: 100%;
-    min-height: 100% !important;
+    /* height: 100%; */
+    /* min-height: 100% !important; */
 }
 .asset-viewer-1 {
     width: 100%;
@@ -181,15 +181,16 @@ $desktop: 992px;*/
 }
 
 .fullscreen-metadata {
-    position: absolute;
+    /* position: absolute; */
     background: #f1f8f1;
-    left: 0px;
-    bottom: 0px;
+    /* left: 0px;
+    bottom: 0px; */
+    margin: 0px;
     z-index: 1;
     opacity: 0.98;
     width: 100%;
     height: 80px;
-    padding: 20px;
+    /* padding: 20px; */
     transition: transform 0.2s linear;
     transform: translateY(0px);
 }
@@ -263,4 +264,108 @@ $desktop: 992px;*/
 .pano {
     width: 100%;
     height: 100%;
+}
+
+
+.quiz-cntnr{
+    /* position: absolute;
+    right: 15px;
+    top: 15px; */
+    width: 100%;
+    letter-spacing: 0.3px;
+    color: #c8c8c8;
+    cursor: pointer;
+    font-size: 12px;
+    transition: 250ms all;
+}
+
+.quiz-cntnr .quiz-btn{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    background-color: #c8c8c8;
+    border-radius: 10px;
+    margin-right: 8px;
+}
+
+.quiz-cntnr.active {
+    color: #000;
+    top: 20px !important;
+}
+
+.quiz-cntnr.active .quiz-btn{
+    border: 1px solid #000;
+    background-color: #000;
+}
+
+.shuffle-cntnr{
+    /* position: absolute;
+    right: 15px;
+    top: 2px; */
+    width: 100%;
+    letter-spacing: 0.3px;
+    color: #c8c8c8;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.shuffle-cntnr .shuffle-btn{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    background-color: #c8c8c8;
+    border-radius: 10px;
+    margin-right: 8px;
+}
+
+.shuffle-cntnr.active{
+    color: #000;
+}
+.shuffle-cntnr.active .shuffle-btn{
+    border: 1px solid #000;
+    background-color: #000;
+}
+
+.caption-btn-cntnr{
+    /* position: absolute;
+    left: 15px;
+    top: 15px; */
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    letter-spacing: 0.3px;
+    color: #c8c8c8;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.caption-btn-cntnr .caption-btn{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border: 1px solid #c8c8c8;
+    background-color: #c8c8c8;
+    border-radius: 10px;
+    margin-right: 8px;
+}
+
+.caption-btn-cntnr.active{
+    color: #000;
+}
+
+.caption-btn-cntnr.active .caption-btn{
+    border: 1px solid #000;
+    background-color: #000;
+}
+
+.quiz-shuf-cntnr{
+    padding: 20px 0px;
+    height: 80px;
+}
+
+.abc{
+    /* height: 90vh;
+    min-height: 90vh; */
 }
