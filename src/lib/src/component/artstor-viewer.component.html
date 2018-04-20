@@ -26,9 +26,11 @@
   </div>
   <div class="fullscreen-metadata row" *ngIf="isFullscreen">
     <div class="col-md-3">
-      <div class="caption-btn-cntnr" [ngClass]="[ showCaption ? 'active' : '' ]"  (click)="showCaption = !showCaption" title="{{ showCaption ? 'Hide Asset Meta Information' : 'Show Asset Meta Information' }}">
-        <span class="caption-btn"></span>
-        {{ showCaption ? 'HIDE CAPTION' : 'SHOW CAPTION' }}
+      <div class="centered-buttons">
+        <div class="caption-btn-cntnr" [ngClass]="[ showCaption ? 'active' : '' ]"  (click)="showCaption = !showCaption" title="{{ showCaption ? 'Hide Asset Meta Information' : 'Show Asset Meta Information' }}">
+          <span class="btn-dot"></span>
+          {{ showCaption ? 'HIDE CAPTION' : 'SHOW CAPTION' }}
+        </div>
       </div>
     </div>
     <div class="p-2 col-md-6">
@@ -41,13 +43,13 @@
       </div>
     </div>
     <div class="col-md-3">
-      <div class="quiz-shuf-cntnr">
-        <div class="shuffle-cntnr" *ngIf="quizMode" [ngClass]="[ quizShuffle ? 'active' : '' ]" (click)="toggleQuizShuffle()" title="Toggle Asset Suffle">
-          <span class="shuffle-btn"></span>
+      <div class="centered-buttons">
+        <div *ngIf="!quizMode" [ngClass]="[ quizShuffle ? 'active' : '' ]" (click)="toggleQuizShuffle()" title="Toggle Asset Suffle">
+          <span class="btn-dot"></span>
           SHUFFLE {{ quizShuffle ? 'ON' : 'OFF' }}
         </div>
         <div class="quiz-cntnr" [ngClass]="[ quizMode ? 'active' : '' ]" (click)="toggleQuizMode()" title="{{ quizMode ? 'Deactivate Quiz Mode' : 'Activate Quiz Mode' }}">
-          <span class="quiz-btn"></span>
+          <span class="btn-dot"></span>
           QUIZ MODE {{ quizMode ? 'ON' : 'OFF' }}
         </div>
       </div>
