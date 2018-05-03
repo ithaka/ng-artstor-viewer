@@ -20,10 +20,6 @@
   </div>
   <!-- Large thumbnail fallback-->
   <div id="fallbackViewer" *ngIf="state == 4"><img class="item item--thumbnail" alt="{{ asset.title }}" [attr.src]="asset.thumbnail_url" (error)="asset.fallbackThumbnailUrl()"></div>
-  <!--Viewer Buttons-->
-  <div class="button-group asset-viewer__buttons" id="imageButtons-{{ osdViewerId }}">
-    <button class="btn btn--icon" [class.hidden]="state != 1" id="zoomIn-{{ osdViewerId}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomOut-{{ osdViewerId }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomFit-{{ osdViewerId }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ osdViewerId }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
-  </div>
   <div class="fullscreen-metadata row" *ngIf="isFullscreen">
     <div class="col-md-3">
       <div class="centered-buttons">
@@ -54,5 +50,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <!--Viewer Buttons-->
+  <div class="button-group asset-viewer__buttons" id="imageButtons-{{ osdViewerId }}">
+    <button class="btn btn--icon" [class.hidden]="state != 1" id="zoomIn-{{ osdViewerId}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomOut-{{ osdViewerId }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon" [class.hidden]="state != 1" id="zoomFit-{{ osdViewerId }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon" *ngIf="!isFullscreen" id="fullScreen-{{ osdViewerId }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
   </div>
 </div>
