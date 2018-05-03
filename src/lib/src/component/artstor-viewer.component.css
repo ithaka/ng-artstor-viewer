@@ -82,14 +82,19 @@ $desktop: 992px;*/
 .osd-wrap {
     position: relative;
     height: 600px;
-    height: 90vh;
     width: 100%;
-    min-height: 90vh;
+    height: calc( 100vh - 80px );
+    min-height: calc( 100vh - 80px);
 }
 @media(max-width: 576px) {
     .osd-wrap {
         height: 50vh;
         min-height: 50vh;
+    }
+
+    .fullscreen .osd-wrap {
+        height: calc( 100vh - 80px );
+        min-height: calc( 100vh - 80px);
     }
 }
 
