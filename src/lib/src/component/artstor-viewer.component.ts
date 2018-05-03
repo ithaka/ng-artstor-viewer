@@ -39,7 +39,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Input() isFullscreen: boolean
     @Input() showCaption: boolean
     @Input() quizMode: boolean
-    @Input() quizShuffle: boolean
     @Input() testEnv: boolean
     @Input() thumbnailMode: boolean
     @Input() encrypted: boolean
@@ -83,9 +82,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Output() assetDrawer = new EventEmitter()
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
-
-    @Output() toggleQuizShuffleCallBack = new EventEmitter()
-    @Output() toggleQuizModeCallBack = new EventEmitter()
 
     private _asset: Asset
     private assetSub: Subscription
@@ -258,7 +254,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.osdViewer.addOnceHandler('ready', () => {
-            console.log('here');
             console.info("Tiles are ready");
             this.state = viewState.openSeaReady
         });
@@ -446,14 +441,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      */
     private disableContextMenu(event: Event): boolean{
         return false;
-    }
-
-    private toggleQuizShuffle(): void{
-        this.toggleQuizShuffleCallBack.emit();
-    }
-
-    private toggleQuizMode(): void{
-        this.toggleQuizModeCallBack.emit();
     }
 }
 
