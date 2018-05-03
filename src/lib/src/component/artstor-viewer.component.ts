@@ -206,6 +206,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // OpenSeaDragon Initializer
         this.osdViewer = new OpenSeadragon({
             id: this.osdViewerId,
+            defaultZoomLevel: 0.9, // We don't want the image to be covered on load
             // prefix for Icon Images
             prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
