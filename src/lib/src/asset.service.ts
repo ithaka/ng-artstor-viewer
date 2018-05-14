@@ -142,6 +142,7 @@ export class AssetService {
             collection_name: data.collection_name,
             collection_type: data.collection_type,
             contributinginstitutionid: data.contributinginstitutionid,
+            personalCollectionOwner: data.personalCollectionOwner,
             download_size: data.downloadSize || data.download_size || '1024,1024',
             fileProperties: data.fileProperties || [],
             height: data.height,
@@ -197,6 +198,7 @@ export interface AssetData {
   collection_name: string
   collection_type: number
   contributinginstitutionid: number
+  personalCollectionOwner: number
   download_size: string
   fileProperties: FileProperty[] // array of objects with a key/value pair
   height: number
@@ -228,6 +230,7 @@ interface AssetDataResponse {
   collection_name: string
   collection_type: number
   contributinginstitutionid: number
+  personalCollectionOwner: number
   downloadSize?: string
   download_size?: string
   fileProperties: { [key: string]: string }[] // array of objects with a key/value pair

@@ -18,6 +18,7 @@ export class Asset {
     tileSource: string
     collectionType: number
     contributinginstitutionid: number
+    personalCollectionOwner: number
     // Not reliably available
     categoryId: string
     categoryName: string
@@ -154,6 +155,7 @@ export class Asset {
         this.filePropertiesArray = data.fileProperties
         this.collectionType = data.collection_type
         this.contributinginstitutionid = data.contributinginstitutionid
+        this.personalCollectionOwner = data.personalCollectionOwner
         // we control the default size of the thumbnail url
         this.thumbnail_url = this.replaceThumbnailSize(data.thumbnail_url, this.thumbnail_size)
         this.typeId = data.object_type_id
