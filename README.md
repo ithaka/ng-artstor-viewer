@@ -1,4 +1,10 @@
 # Artstor Viewer, Angular Component
+Media viewer for content within Artstor Image Workspace
+
+## Ithaka Open Source Initiative
+This repository is open sourced by Ithaka as part of our initiative to increase transparency and contribute to the community. This particular repository is a working repository not intended as software available for consumption.
+
+[Learn more](http://artstor.org/open-source) about our open source initiative
 
 Uses [Angular Package Format v4.0](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit#heading=h.k0mh3o8u5hx).
 
