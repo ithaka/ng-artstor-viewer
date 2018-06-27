@@ -277,6 +277,10 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
             console.log("Test access to Pano metadata")
             let headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
+
+            // Format pano_xml url incase it comes badly formatted from backend 
+            this.asset.viewerData.panorama_xml = this.asset.viewerData.panorama_xml.replace('stor//', 'stor/')
+
             // Check if pano xml is available before loading pano
             this._http.get(this.asset.viewerData.panorama_xml, { headers: headers })
                 .take(1)
