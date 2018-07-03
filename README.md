@@ -6,7 +6,9 @@ This repository is open sourced by Ithaka as part of our initiative to increase 
 
 [Learn more](http://artstor.org/open-source) about our open source initiative
 
-Uses [Angular Package Format v4.0](https://docs.google.com/document/d/1CZC2rcpxffTDfRDs6p1cfbmKNLA6x5O-NtkJglDaBVs/edit#heading=h.k0mh3o8u5hx).
+**Copyright 2018 Ithaka Harbors, Inc.**
+
+## Building the Project
 
 _Commands use `yarn`, which we recommend, but can be replaced with `npm`_
 
