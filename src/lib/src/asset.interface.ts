@@ -67,10 +67,10 @@ export class Asset {
                 data.fieldValue = data.link
             }
 
-            // if the field exists, add to it
-            if (formattedData[data.fieldName]) {
+            // if the field exists, add to it (make sure the field vaue exists)
+            if (formattedData[data.fieldName] && data.fieldValue) {
                 formattedData[data.fieldName].push(data.fieldValue)
-            } else { // otherwise make a new field
+            } else if(data.fieldValue) { // otherwise make a new field (make sure the field vaue exists)
                 formattedData[data.fieldName] = [data.fieldValue]
             }
         }
