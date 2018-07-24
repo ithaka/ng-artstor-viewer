@@ -38,7 +38,7 @@ return Promise.resolve()
   .then(() => console.log('ES5 compilation succeeded.'))
   // Copy package files
   .then(() => Promise.resolve()
-    .then(() => _relativeCopy('LICENSE', rootFolder, distFolder))
+    .then(() => _relativeCopy('LICENSE.md', rootFolder, distFolder))
     .then(() => _relativeCopy('package.json', rootFolder, distFolder))
     .then(() => _relativeCopy('README.md', rootFolder, distFolder))
     .then(() => _relativeCopy('**/*', es5OutputFolder, distFolder ))
@@ -53,6 +53,7 @@ return Promise.resolve()
 
 // Copy files maintaining relative paths.
 function _relativeCopy(fileGlob, from, to) {
+  console.log("Copying ", fileGlob)
   return new Promise((resolve, reject) => {
     glob(fileGlob, { cwd: from, nodir: true }, (err, files) => {
       if (err) reject(err);
