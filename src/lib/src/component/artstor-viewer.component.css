@@ -85,6 +85,7 @@ $desktop: 992px;*/
     height: 90vh;
     width: 100%;
     min-height: 90vh;
+    background: #f8faf8;
 }
 @media(max-width: 576px) {
     .osd-wrap {
