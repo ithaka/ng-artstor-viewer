@@ -26,6 +26,7 @@ To publish a new version:
 - `git commit` to commit the version
 - `yarn build` to build with new version
 - `npm publish dist` to publish to yarn/npm
+- `git push` to push version to master
 
 ## The Demo App
 Used to test the viewer, and provides multiple asset ids to test different use cases.
