@@ -23,6 +23,7 @@ Using this repo:
 
 To publish a new version:
 - `yarn release` to increment version
+- `git commit` to commit the version
 - `yarn build` to build with new version
 - `npm publish dist` to publish to yarn/npm
 
