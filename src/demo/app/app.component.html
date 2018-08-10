@@ -19,7 +19,7 @@
         </div>
         <div class="col-md-8">
             <h4>Viewer:</h4>
-            <artstor-viewer [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="testEnv" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+            <artstor-viewer *ngIf="userHasSession" [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="testEnv" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
         </div>
     </div>
 </div>
