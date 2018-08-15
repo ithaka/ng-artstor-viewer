@@ -13,12 +13,6 @@
   <div class="video-player" [class.hidden]="state != 2">
     <iframe id="{{ 'kalturaIframe-' + index }}" frameborder="0"></iframe>
   </div>
-  <!-- Audio Player-->
-  <!--<div *ngIf="state == 5">
-    <audio class="item video-player" id="audio-{{ osdViewerId }}" controls>
-      <source [attr.src]="asset.downloadLink" type="audio/MPEG">{{ 'audio_error' }}
-    </audio>
-  </div>-->
   <!--panorama Krpano viewer-->
   <div class="krpano-viewer osd-wrap" [class.hidden]="state != 3">
     <div class="pano" id="pano-{{ index }}"></div>
