@@ -184,7 +184,7 @@ export class Asset {
 
         // set up kaltura info if it exists
         if (data.fpxInfo) {
-            this.kalturaUrl = data.fpxInfo.imageUrl
+            this.kalturaUrl = data.fpxInfo.imageUrl.replace('http://', '//')
         }
     }
 
