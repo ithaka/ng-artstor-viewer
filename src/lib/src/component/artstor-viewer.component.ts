@@ -148,6 +148,15 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         
         this._assetService.buildAsset(assetId, groupId)
             .subscribe((asset) => {
+                // Replace <br/> tags from title, creator & date values with a space
+                asset.title = asset.title.replace(/<br\s*[\/]?>/gi, ' ')
+                if(asset.formattedMetadata && asset.formattedMetadata['Creator'] && asset.formattedMetadata['Creator'][0]){
+                    asset.formattedMetadata['Creator'][0] = asset.formattedMetadata['Creator'][0].replace(/<br\s*[\/]?>/gi, ' ')
+                }
+                if(asset.formattedMetadata && asset.formattedMetadata['Date'] && asset.formattedMetadata['Date'][0]){
+                    asset.formattedMetadata['Date'][0] = asset.formattedMetadata['Date'][0].replace(/<br\s*[\/]?>/gi, ' ')
+                }
+
                 this.asset = asset
                 this.assetMetadata.emit(asset)
                 this.loadViewer(asset)
