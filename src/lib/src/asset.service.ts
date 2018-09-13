@@ -112,9 +112,10 @@ export class AssetService {
      */
   public getEncryptedMetadata(secretId: string): Observable<any> {
     let headers: HttpHeaders = new HttpHeaders({ fromKress: 'true'})
+    let referrer: string = document.referrer
 
     return this._http
-      .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId), { headers: headers })
+      .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer), { headers: headers })
       .map((res) => {
           if (!res.metadata[0]) {
             throw new Error('Unable to load metadata via encrypted id!')
