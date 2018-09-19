@@ -12,14 +12,15 @@
             <hr/>
             <h4>Options:</h4>
             <button class="btn btn-secondary" (click)="useThumbnail = !useThumbnail" style="display: block; margin-top: 15px;">Forced Thumbnail Mode: {{ useThumbnail }}</button> 
-            <button class="btn btn-secondary" (click)="testEnv = !testEnv" style="display: block; margin-top: 15px;">Test Environment: {{ testEnv }}</button> 
+            <button class="btn btn-secondary" (click)="testEnv = !testEnv" style="display: block; margin-top: 15px;">Test Environment: {{ testEnv }}</button>  
+            <button class="btn btn-secondary" (click)="legacyFlag = !legacyFlag" style="display: block; margin-top: 15px;">Legacy Flag: {{ legacyFlag }}</button> 
             <hr/>
             <h4>Actions:</h4>
             <a class="btn btn-secondary" [attr.href]="downloadLink" download>Download Asset</a>
         </div>
         <div class="col-md-8">
             <h4>Viewer:</h4>
-            <artstor-viewer *ngIf="userHasSession" [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="testEnv" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
+            <artstor-viewer *ngIf="userHasSession" [assetId]="currentId" [thumbnailMode]="useThumbnail" [encrypted]="isEncrypted" [testEnv]="testEnv" [legacyFlag]="legacyFlag" (assetMetadata)="handleLoadedMetadata($event)"></artstor-viewer>
         </div>
     </div>
 </div>

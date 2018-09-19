@@ -52,12 +52,12 @@ export class AssetService {
     }
   }
 
-  public buildAsset(assetId: string, groupId?: string): Observable<Asset> {
+  public buildAsset(assetId: string, { groupId = '', legacyFlag = true }={}): Observable<Asset> {
     let metadataObservable
     if (this.encrypted) {
-      metadataObservable = this.getEncryptedMetadata(assetId)
+      metadataObservable = this.getEncryptedMetadata(assetId, legacyFlag)
     } else {
-      metadataObservable = this.getMetadata(assetId, groupId)
+      metadataObservable = this.getMetadata(assetId, { groupId, legacyFlag })
     }
     return metadataObservable.flatMap((assetData) => {
 
@@ -84,11 +84,11 @@ export class AssetService {
    * @param assetId The id of the asset for which to obtain the metadata
    * @param groupId The group from which the asset was accessed, if it exists (helps with authorization)
    */
-  private getMetadata(assetId: string, groupId?: string): Observable<AssetData> {
-    let url = this.getUrl() + 'api/v1/metadata?object_ids=' + assetId
+  private getMetadata(assetId: string, { groupId, legacyFlag }): Observable<AssetData> {
+    let url = this.getUrl() + 'api/v1/metadata?object_ids=' + assetId + '&legacy=' + legacyFlag 
     if (groupId){
         // Groups service modifies certain access rights for shared assets
-        url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + encodeURIComponent(assetId) 
+        url = this.getUrl() + 'api/v1/group/'+ groupId +'/metadata?object_ids=' + encodeURIComponent(assetId) + '&legacy=' + legacyFlag 
     }
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
@@ -110,12 +110,12 @@ export class AssetService {
      * Call to API which returns an asset, given an encrypted_id
      * @param token The encrypted token that you want to know the asset id for
      */
-  public getEncryptedMetadata(secretId: string): Observable<any> {
+  public getEncryptedMetadata(secretId: string, legacyFlag?: boolean): Observable<any> {
     let headers: HttpHeaders = new HttpHeaders({ fromKress: 'true'})
     let referrer: string = document.referrer
 
     return this._http
-      .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer), { headers: headers })
+      .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag , { headers: headers })
       .map((res) => {
           if (!res.metadata[0]) {
             throw new Error('Unable to load metadata via encrypted id!')

@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   useThumbnail: boolean = false
   testEnv: boolean = false
   isEncrypted: boolean = false
+  legacyFlag: boolean = false
   downloadLink: string = ""
   userHasSession: boolean = false
   

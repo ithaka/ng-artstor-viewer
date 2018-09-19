@@ -50,7 +50,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this._assetService.encrypted = this.encrypted
         if (value && value != this._assetId) {
             this._assetId = value
-            this.loadAssetById(this.assetId, this.groupId)
+            if(this.initialized) {
+                this.loadAssetById(this.assetId, this.groupId)
+            }
         }
     }
     get assetId(): string {
@@ -73,6 +75,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     set asset(asset: Asset) {
         this._asset = asset
     }
+    // Optional Inputs
+    @Input() legacyFlag: boolean
 
     // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
@@ -83,6 +87,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
+    private initialized: boolean = false
     private _asset: Asset
     private assetSub: Subscription
     private state: viewState = viewState.loading
@@ -107,6 +112,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        // Ensure component is initialized, and all inputs available, before first load of asset
+        this.initialized = true
+        this.loadAssetById(this.assetId, this.groupId)
         // Assets don't initialize with fullscreen variable
         // And assets beyond the first/primary only show in fullscreen
         if (this.index > 0) {
@@ -146,7 +154,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Set viewer to "loading"
         this.state = viewState.loading
         
-        this._assetService.buildAsset(assetId, groupId)
+        this._assetService.buildAsset(assetId, {groupId, legacyFlag: this.legacyFlag})
             .subscribe((asset) => {
                 // Replace <br/> tags from title, creator & date values with a space
                 asset.title = asset.title.replace(/<br\s*[\/]?>/gi, ' ')
@@ -284,7 +292,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
-            console.log("Test access to Pano metadata")
             let headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
 
             // Format pano_xml url incase it comes badly formatted from backend 
