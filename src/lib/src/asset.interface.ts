@@ -15,7 +15,7 @@ export class Asset {
     kalturaUrl: string
     downloadLink: string
     downloadName: string
-    tileSource: string
+    tileSource: string | string[]
     collectionType: number
     contributinginstitutionid: number
     personalCollectionOwner: number
@@ -162,13 +162,16 @@ export class Asset {
         this.typeName = this.initTypeName(data.object_type_id)
         this.disableDownload =  data.download_size === '0,0'
         this.SSID = data.SSID
-        this.fileName = data.fileProperties.find((obj) => {
-            return !!obj.fileName
-        }).fileName
+        // this.fileName = data.fileProperties.find((obj) => {
+        //     return !!obj && !!obj.fileName
+        // }).fileName
+        // if(!this.fileName) {
+        //     this.fileName = ""
+        // }
         this.updated_on = data.updated_on
         // Set Download information
-        let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
-        this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
+        // let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
+        // this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
         this.downloadLink = this.buildDownloadLink(data)
         data.viewer_data && (this.viewerData = data.viewer_data)
 
@@ -180,7 +183,18 @@ export class Asset {
         } else {
             imgPath = '/' + data.image_url
         }
-        this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+        if (data.image_compound_urls && data.image_compound_urls[0]) {
+            for (let i = 0; i < data.image_compound_urls.length; i++) {
+                let path = data.image_compound_urls[i]
+                // path = path.replace('/info.json','')
+                // data.image_compound_urls[i] = '//tsstage.artstor.org/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(path) + '/info.json'
+                data.image_compound_urls[i] = '//stor.stage.artstor.org/fcgi-bin/iipsrv.fcgi?IIIF=' + path
+                //encodeURIComponent(path) + '/info.json'
+            }
+            this.tileSource = data.image_compound_urls
+        } else {
+            this.tileSource = data.tileSourceHostname + '/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(imgPath) + '/info.json'
+        }
 
         // set up kaltura info if it exists
         if (data.fpxInfo) {

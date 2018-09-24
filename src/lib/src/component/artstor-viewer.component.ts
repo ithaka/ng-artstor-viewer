@@ -94,7 +94,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private removableAsset: boolean = false
     private subscriptions: Subscription[] = []
     // private fallbackFailed: boolean = false
-    private tileSource: string
+    private tileSource: string | string[]
     private lastZoomValue: number
     // private showCaption: boolean = true
 
@@ -218,6 +218,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
+        let isMultiView: boolean = Array.isArray(this.tileSource)
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
@@ -228,6 +229,11 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // prefix for Icon Images
             prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
+            // Trigger conditionally if tilesource is an array of multiple sources
+            sequenceMode: isMultiView,
+            showReferenceStrip: isMultiView,
+            referenceStripScroll: 'horizontal',
+            autoHideControls: false,
             gestureSettingsMouse: {
                 scrollToZoom: true,
                 pinchToZoom: true
@@ -237,12 +243,16 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             zoomInButton: 'zoomIn-' + this.osdViewerId,
             zoomOutButton: 'zoomOut-' + this.osdViewerId,
             homeButton: 'zoomFit-' + this.osdViewerId,
-            sequenceMode: true,
-            initialPage: 0,
-            nextButton: 'nextButton',
+            previousButton: 'previousButton-' + this.osdViewerId,
+            nextButton: 'nextButton-' + this.osdViewerId,
+            initialPage: 1,
             showNavigator: true,
-            navigatorPosition: 'BOTTOM_LEFT',
-            navigatorSizeRatio: 0.15
+            navigatorPosition: 'TOP_LEFT',
+            navigatorSizeRatio: 0.15,
+            viewportMargins: {
+                bottom: 100
+            },
+            timeout: 60000
         });
 
         // ---- Use handler in case other error crops up

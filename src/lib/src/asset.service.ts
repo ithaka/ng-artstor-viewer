@@ -75,6 +75,7 @@ export class AssetService {
         }
       })
       .map((assetData) => {
+        console.log("data",assetData)
         return new Asset(assetData)
       })
   }
@@ -148,6 +149,7 @@ export class AssetService {
             fileProperties: data.fileProperties || [],
             height: data.height,
             image_url: data.image_url,
+            image_compound_urls: data.image_compound_urls,
             metadata_json: data.metadata_json,
             object_type_id: data.object_type_id,
             resolution_x: data.resolution_x,
@@ -204,6 +206,7 @@ export interface AssetData {
   fileProperties: FileProperty[] // array of objects with a key/value pair
   height: number
   image_url: string
+  image_compound_urls?: string[],
   metadata_json: MetadataField[]
   object_id: string
   object_type_id: number

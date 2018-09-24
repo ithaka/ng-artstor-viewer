@@ -58,3 +58,25 @@ h4 {
 .icon-fullscreen {
   background-image: url(//library.artstor.org/assets/img/icon-fullscreen.svg);
 }
+
+.referencestrip {
+  position: absolute !important;
+  bottom: 0px !important;
+  height: 100px !important;
+  min-width: 500px !important;
+  width: 100% !important;
+  display: block !important;
+  float: none !important;
+  margin: 0px !important;
+  opacity: 1 !important;
+  white-space: nowrap !important;
+  overflow-x: scroll !important;
+}
+
+.referencestrip > div {
+  display: inline-block !important;
+  float: none !important;
+  height: 100px !important;
+  width: 100px !important;
+  position: relative !important;
+}
