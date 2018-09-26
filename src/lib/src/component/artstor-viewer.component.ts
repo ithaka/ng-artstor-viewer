@@ -293,10 +293,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private loadKrpanoViewer(): void{
         if( this.asset.viewerData && this.asset.viewerData.panorama_xml ){
             let headers = new HttpHeaders({ 'Content-Type': 'text/xml' }).set('Accept', 'text/xml');
-
+            let panoXml = this.asset.viewerData.panorama_xml
             // Format pano_xml url incase it comes badly formatted from backend 
-            this.asset.viewerData.panorama_xml = this.asset.viewerData.panorama_xml.replace('stor//', 'stor/')
-
+            panoXml = panoXml.replace('stor//', 'stor/')
+            // Make sure protocol is relative
+            panoXml = panoXml.replace('http://', '//')
+            // Set URL on asset
+            this.asset.viewerData.panorama_xml = panoXml
             // Check if pano xml is available before loading pano
             this._http.get(this.asset.viewerData.panorama_xml, { headers: headers })
                 .take(1)
