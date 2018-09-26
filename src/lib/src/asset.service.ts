@@ -39,6 +39,7 @@ export class AssetService {
     let nonRelativeDomains = [
       "localhost",
       "local.",
+      "ngrok.io",
       "ang-ui.apps.prod.cirrostratus.org",
       "ang-ui.apps.test.cirrostratus.org",
       "www.jstor.org"
@@ -46,7 +47,7 @@ export class AssetService {
     // If it's a non-relative domain, use an explicit domain for api calls
     let useDomain: boolean = new RegExp(nonRelativeDomains.join("|")).test(document.location.hostname)
     if (useDomain) {
-      return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+      return this.testEnv ? '//stagely.artstor.org/' : '//library.artstor.org/'
     } else {
       return '/'
     }

@@ -71,6 +71,19 @@ h4 {
   opacity: 1 !important;
   white-space: nowrap !important;
   overflow-x: scroll !important;
+  overflow-y: hidden !important;
+  touch-action: auto !important;
+}
+
+.referencestrip::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+.referencestrip::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: rgba(255,255,255,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 
 .referencestrip > div {
@@ -79,4 +92,5 @@ h4 {
   height: 100px !important;
   width: 100px !important;
   position: relative !important;
+  touch-action: auto !important;
 }
