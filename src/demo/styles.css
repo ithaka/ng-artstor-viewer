@@ -73,6 +73,8 @@ h4 {
   overflow-x: scroll !important;
   overflow-y: hidden !important;
   touch-action: auto !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
 }
 
 .referencestrip::-webkit-scrollbar {
@@ -109,20 +111,20 @@ h4 {
 
 .referencestrip > div {
   background: #000 !important;
-  border: 2px solid transparent;
-
+  border: 2px solid transparent !important;
+  margin: 0px 5px !important;
   display: inline-block !important;
   float: none !important;
   height: 180px !important;
   width: 150px !important;
   position: relative !important;
   touch-action: auto !important;
-  padding-top: 45px !important;
+  padding: 60px 0px 0px 0px !important;
 }
 
 .navigator {
   position: absolute !important;
-  bottom: 100px !important;
+  bottom: 120px !important;
   z-index: 1 !important;
   left: 10px !important;
   border: 3px solid rgb(0,0,0) !important;

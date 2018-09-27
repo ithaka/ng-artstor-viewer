@@ -101,6 +101,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private kalturaUrl: string
     private osdViewer: any
     private osdViewerId: string
+    public isMultiView: boolean
+    public multiViewPage: number = 1
+    public multiViewCount: number = 1
 
     constructor(
         private _http: HttpClient, // TODO: move _http into a service
@@ -174,7 +177,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private loadViewer(asset: Asset): void {
-
+        // Reset options
+        this.isMultiView = false
         // Display thumbnail
         this.state = viewState.thumbnailFallback
         if (this.thumbnailMode) { return } // leave state on thumbnail if thumbnail mode is triggered
@@ -218,7 +222,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
-        let isMultiView: boolean = Array.isArray(this.tileSource)
+        this.isMultiView = Array.isArray(this.tileSource)
+        this.multiViewPage = 1
+        this.multiViewCount = this.tileSource.length
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
@@ -230,12 +236,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
             // Trigger conditionally if tilesource is an array of multiple sources
-            sequenceMode: isMultiView,
-            showReferenceStrip: isMultiView,
+            sequenceMode: this.isMultiView,
+            showReferenceStrip: this.isMultiView,
             referenceStripScroll: 'horizontal',
             autoHideControls: false,
             gestureSettingsMouse: {
-                scrollToZoom: true,
+                scrollToZoom: false,
                 pinchToZoom: true
             },
             controlsFadeLength: 500,
@@ -267,6 +273,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // Save viewport pan for downloading the view
             this.asset.viewportDimensions.center = value.center
         });
+
+        this.osdViewer.addHandler('page', (value: {page: number, eventSource: any, userData?: any}) => {
+            let index = value.page
+            // Set current view "page" number
+            this.multiViewPage = index + 1
+        })
 
         this.osdViewer.addHandler('zoom', (value: any) => {
             this.lastZoomValue = value.zoom;
