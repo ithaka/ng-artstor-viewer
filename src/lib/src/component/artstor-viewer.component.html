@@ -21,8 +21,9 @@
   <div *ngIf="!thumbnailMode">
     <div class="button-group asset-viewer__buttons" id="imageButtons-{{ osdViewerId }}">
       <button class="btn btn--icon btn--zoomIn" [class.hidden]="state != 1" id="zoomIn-{{ osdViewerId}}" title="Zoom In"><i class="icon icon-zoom-in"></i></button><button class="btn btn--icon btn--zoomOut" [class.hidden]="state != 1" id="zoomOut-{{ osdViewerId }}" title="Zoom Out"><i class="icon icon-zoom-out"></i></button><button class="btn btn--icon btn--zoomFit" [class.hidden]="state != 1" id="zoomFit-{{ osdViewerId }}" title="Zoom Fit"><i class="icon icon-fit"></i></button><button class="btn btn--icon btn--fullScreen" *ngIf="!isFullscreen" id="fullScreen-{{ osdViewerId }}" (click)="togglePresentationMode()" title="Full Screen"><i class="icon icon-fullscreen"></i></button><button class="btn btn--icon" *ngIf="isFullscreen && assetCompareCount > 1" (click)="removeAsset.emit(asset)" title="Remove from Comparison"><i class="icon icon-close"></i></button>
-      <button class="btn btn--icon" id="previousButton-{{ osdViewerId}}"><-</button>
-      <button class="btn btn--icon" id="nextButton-{{ osdViewerId}}">-></button>
+    </div>
+    <div class="button-group asset-viewer__pagination" id="imagePageButtons-{{ osdViewerId }}">
+      <button class="btn btn--icon btn--prev" id="previousButton-{{ osdViewerId}}"><</button><span class="btn-divider"></span><button class="btn btn--icon btn--next" id="nextButton-{{ osdViewerId}}">></button>
     </div>
     <div class="fullscreen-metadata" *ngIf="isFullscreen" [class.slideAway]="!showCaption">
       <div class="vertical-center-wrap"><i class="icon icon-direction icon-left" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber <= 1" title="Previous in results" (click)="prevPage.emit()"></i>

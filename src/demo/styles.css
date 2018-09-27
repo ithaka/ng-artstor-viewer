@@ -62,7 +62,7 @@ h4 {
 .referencestrip {
   position: absolute !important;
   bottom: 0px !important;
-  height: 100px !important;
+  height: 200px !important;
   min-width: 500px !important;
   width: 100% !important;
   display: block !important;
@@ -80,17 +80,55 @@ h4 {
   width: 7px;
 }
 
+#referencestrip > div {
+  /* background: rgb(153, 153, 153) */
+  background: rgb(0,0,0) !important;
+  padding: 0px !important;
+  margin: 0px 5px !important;
+}
+
+.referencestrip > div[style^="background: rgb(153, 153, 153)"] {
+  /* background: #000 !important; */
+}
+.referencestrip > div[style^="background: rgb(153, 153, 153)"] canvas {
+  border: 2px solid #C9510D !important;
+  padding: 0px !important;
+}
+
 .referencestrip::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(255,255,255,.5);
-  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  -webkit-box-shadow: 0 0 1px rgba(255,255,255,.7);
+  width: 5px;
+}
+
+/* Select BOTTOM LEFT positioning div */
+.openseadragon-canvas + div + div + div + div {
+  position: static !important;
 }
 
 .referencestrip > div {
+  background: #000 !important;
+  border: 2px solid transparent;
+
   display: inline-block !important;
   float: none !important;
-  height: 100px !important;
-  width: 100px !important;
+  height: 180px !important;
+  width: 150px !important;
   position: relative !important;
   touch-action: auto !important;
+  padding-top: 45px !important;
+}
+
+.navigator {
+  position: absolute !important;
+  bottom: 100px !important;
+  z-index: 1 !important;
+  left: 10px !important;
+  border: 3px solid rgb(0,0,0) !important;
+  opacity: 0.95;
+}
+
+[class$="-displayregion"] {
+  border: 2px solid rgb(224, 11, 11) !important;
 }

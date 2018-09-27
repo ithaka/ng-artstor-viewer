@@ -247,12 +247,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             nextButton: 'nextButton-' + this.osdViewerId,
             initialPage: 1,
             showNavigator: true,
-            navigatorPosition: 'TOP_LEFT',
+            navigatorPosition: 'BOTTOM_LEFT',
             navigatorSizeRatio: 0.15,
-            viewportMargins: {
-                bottom: 100
-            },
-            timeout: 60000
+            // viewportMargins: {
+            //     bottom: 100
+            // },
+            timeout: 60000,
+            useCanvas: false
         });
 
         // ---- Use handler in case other error crops up
