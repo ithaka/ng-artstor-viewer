@@ -188,7 +188,7 @@ export class Asset {
                 let path = data.image_compound_urls[i]
                 // path = path.replace('/info.json','')
                 // data.image_compound_urls[i] = '//tsstage.artstor.org/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(path) + '/info.json'
-                data.image_compound_urls[i] = '//stor.stage.artstor.org/fcgi-bin/iipsrv.fcgi?IIIF=' + path
+                data.image_compound_urls[i] = 'http//stor.stage.artstor.org/fcgi-bin/iipsrv.fcgi?IIIF=' + path
                 //encodeURIComponent(path) + '/info.json'
             }
             this.tileSource = data.image_compound_urls
