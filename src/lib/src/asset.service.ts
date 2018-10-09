@@ -45,9 +45,10 @@ export class AssetService {
       "www.jstor.org"
     ]
     // If it's a non-relative domain, use an explicit domain for api calls
+    let stageSubdomain = window.location.protocol === 'http:' ? 'stagely' : 'stage'
     let useDomain: boolean = new RegExp(nonRelativeDomains.join("|")).test(document.location.hostname)
     if (useDomain) {
-      return this.testEnv ? '//stage.artstor.org/' : '//library.artstor.org/'
+      return this.testEnv ? '//'+stageSubdomain+'.artstor.org/' : '//library.artstor.org/'
     } else {
       return '/'
     }
