@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
@@ -24,7 +24,8 @@ enum viewState {
 @Component({
   selector: 'artstor-viewer',
   templateUrl: './artstor-viewer.component.html',
-  styleUrls: ['./artstor-viewer.component.css']
+  styleUrls: ['./artstor-viewer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
@@ -84,6 +85,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Output() prevPage = new EventEmitter()
     @Output() removeAsset = new EventEmitter()
     @Output() assetDrawer = new EventEmitter()
+    @Output() multiViewHelp = new EventEmitter()
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
@@ -94,13 +96,16 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     private removableAsset: boolean = false
     private subscriptions: Subscription[] = []
     // private fallbackFailed: boolean = false
-    private tileSource: string
+    private tileSource: string | string[]
     private lastZoomValue: number
     // private showCaption: boolean = true
 
     private kalturaUrl: string
     private osdViewer: any
     private osdViewerId: string
+    public isMultiView: boolean
+    public multiViewPage: number = 1
+    public multiViewCount: number = 1
 
     constructor(
         private _http: HttpClient, // TODO: move _http into a service
@@ -174,7 +179,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private loadViewer(asset: Asset): void {
-
+        // Reset options
+        this.isMultiView = false
         // Display thumbnail
         this.state = viewState.thumbnailFallback
         if (this.thumbnailMode) { return } // leave state on thumbnail if thumbnail mode is triggered
@@ -218,31 +224,45 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      * - Requires this.asset to have an id
      */
     private loadOpenSea(): void {
+        this.isMultiView = Array.isArray(this.tileSource)
+        this.multiViewPage = 1
+        this.multiViewCount = this.tileSource.length
         // Set state to IIIF/OpenSeaDragon
         this.state = viewState.openSeaReady
         // OpenSeaDragon Initializer
         this.osdViewer = new OpenSeadragon({
             id: this.osdViewerId,
-            // defaultZoomLevel: 1.2, // We don't want the image to be covered on load
-            // visibilityRatio: 0.2, // Determines percentage of background that has to be covered by the image while panning 
             // prefix for Icon Images
             prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
+            // Trigger conditionally if tilesource is an array of multiple sources
+            sequenceMode: this.isMultiView,
+            showReferenceStrip: this.isMultiView,
+            referenceStripScroll: 'horizontal',
+            autoHideControls: false,
             gestureSettingsMouse: {
-                scrollToZoom: true,
+                scrollToZoom: false,
                 pinchToZoom: true
             },
             controlsFadeLength: 500,
-            //   debugMode: true,
             zoomInButton: 'zoomIn-' + this.osdViewerId,
             zoomOutButton: 'zoomOut-' + this.osdViewerId,
             homeButton: 'zoomFit-' + this.osdViewerId,
-            sequenceMode: true,
+            previousButton: 'previousButton-' + this.osdViewerId,
+            nextButton: 'nextButton-' + this.osdViewerId,
             initialPage: 0,
-            nextButton: 'nextButton',
             showNavigator: true,
             navigatorPosition: 'BOTTOM_LEFT',
-            navigatorSizeRatio: 0.15
+            navigatorSizeRatio: 0.15,
+            viewportMargins: {
+                // Center the image when reference strip shows
+                bottom: this.isMultiView ? 190 : 0
+            },
+            timeout: 60000,
+            // useCanvas: false,
+            // defaultZoomLevel: 1.2, // We don't want the image to be covered on load
+            // visibilityRatio: 0.2, // Determines percentage of background that has to be covered by the image while panning 
+            // debugMode: true,
         });
 
         // ---- Use handler in case other error crops up
@@ -256,6 +276,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // Save viewport pan for downloading the view
             this.asset.viewportDimensions.center = value.center
         });
+
+        this.osdViewer.addHandler('page', (value: {page: number, eventSource: any, userData?: any}) => {
+            let index = value.page
+            // Set current view "page" number
+            this.multiViewPage = index + 1
+        })
 
         this.osdViewer.addHandler('zoom', (value: any) => {
             this.lastZoomValue = value.zoom;
@@ -463,6 +489,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      */
     private disableContextMenu(event: Event): boolean{
         return false;
+    }
+
+    /**
+     * Is Multi View help output defined
+     */
+    public hasMultiViewHelp(): boolean {
+        return this.multiViewHelp.observers.length > 0
     }
 }
 

@@ -15,7 +15,8 @@ export class AppService {
      * @param isTest is Test or Prod environment
      */
     getUser(isTest: boolean) : Observable<any> {
-        let url = '//' + (isTest ? 'stage' : 'library' ) +'.artstor.org/api/secure/userinfo?no-cache=' + new Date().valueOf()
+        let stageSubdomain = window.location.protocol === 'http:' ? 'stagely' : 'stage'
+        let url = '//' + (isTest ? stageSubdomain : 'library' ) +'.artstor.org/api/secure/userinfo?no-cache=' + new Date().valueOf()
         return this._http.get(url)
     }
 

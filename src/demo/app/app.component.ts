@@ -8,9 +8,11 @@ import { AppService } from './app.service';
 })
 export class AppComponent implements OnInit {
   meaning: number;
-  currentId: string = "AWSS35953_35953_33681116"
+  currentId: string = "SS34216_34216_39230202"
+  //"AWSS35953_35953_33681116"
+  // "SS34216_34216_39230202" //
   useThumbnail: boolean = false
-  testEnv: boolean = false
+  testEnv: boolean = true
   isEncrypted: boolean = false
   legacyFlag: boolean = false
   downloadLink: string = ""
