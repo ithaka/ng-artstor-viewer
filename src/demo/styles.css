@@ -58,6 +58,12 @@ h4 {
 .icon-fullscreen {
   background-image: url(//library.artstor.org/assets/img/icon-fullscreen.svg);
 }
+.icon-next--white {
+  background-image: url(//stagely.artstor.org/assets/img/icon-right--white.svg);
+}
+.icon-prev--white {
+  background-image: url(//stagely.artstor.org/assets/img/icon-left--white.svg);
+}
 
 .referencestrip {
   position: absolute !important;

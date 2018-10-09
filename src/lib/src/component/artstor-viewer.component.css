@@ -71,6 +71,41 @@ $desktop: 992px;*/
     padding: 0px;
 }
 
+.asset-viewer__edge-arrows {
+    position: absolute;
+    pointer-events: none;
+    top: calc(50% - 120px);
+    width: 100%;
+}
+
+.asset-viewer__edge-arrows .btn {
+    pointer-events: all;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(66,66,66,0.6);
+}
+
+.asset-viewer__edge-arrows .btn .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.asset-viewer__edge-arrows .btn:hover,
+.asset-viewer__edge-arrows .btn:active {
+    background: rgba(66,66,66,1.0);
+}
+
+.asset-viewer__edge-arrows .btn--prev {
+    float: left;
+    margin: 5px;
+}
+
+.asset-viewer__edge-arrows .btn--next {
+    float: right;
+    margin: 5px;
+}
+
 .asset-viewer__pagination .btn {
     color: #fff;
     background: rgba(0,0,0,0.7);
