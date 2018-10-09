@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
@@ -24,7 +24,8 @@ enum viewState {
 @Component({
   selector: 'artstor-viewer',
   templateUrl: './artstor-viewer.component.html',
-  styleUrls: ['./artstor-viewer.component.css']
+  styleUrls: ['./artstor-viewer.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 

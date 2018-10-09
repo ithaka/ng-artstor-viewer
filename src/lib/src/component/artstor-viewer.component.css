@@ -11,7 +11,7 @@ $xsphone: 320px;
 $tablet: 768px;
 $desktop: 992px;*/
 
-.hidden {
+.aiw-hidden {
     display: none;
     pointer-events: none;
 }
@@ -106,11 +106,12 @@ $desktop: 992px;*/
 .asset-viewer__edge-arrows .btn--prev {
     float: left;
     margin: 5px;
+    margin-left: 5px 5px 5px 28px;
 }
 
 .asset-viewer__edge-arrows .btn--next {
     float: right;
-    margin: 5px;
+    margin: 5px 28px 5px 5px;
 }
 
 .asset-viewer__pagination .btn {
@@ -293,61 +294,61 @@ $desktop: 992px;*/
 }
 
 
-    .fullscreen-metadata.slideAway {
-        transform: translateY(100%);
-    }
+.fullscreen-metadata.slideAway {
+    transform: translateY(100%);
+}
 
-    .fullscreen-metadata i{
-        vertical-align: top;
-        margin: 3px;
-        cursor: pointer;
-    }
-    .fullscreen-metadata .title{
-        font-family: 'Lyon Display Web', Georgia, Times;
-        font-size: 18px;
-        display: inline-block;
-        width: 350px;
-        margin: auto;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: top;
-    }
-    .fullscreen-metadata .page-tooltip{
-        font-weight: normal;
-        font-size: 10px;
-        min-width: 120px;
-        line-height: 21px;
-        display: block;
-        position: absolute;
-        z-index: 5000;
-        top: 100%;
-        left: 50%;
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
-        transform: translateX(-50%);
-        box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-        background: white;
-        color: black;
-        padding: 2px 15px 0px;
-        opacity: 0;
-        -webkit-transition: opacity linear 0.3s;
-        -moz-transition: opacity linear 0.3s;
-        transition: opacity linear 0.3s;
-    }
-    .fullscreen-metadata:hover .page-tooltip{
-        opacity: 1;
-    }
+.fullscreen-metadata i{
+    vertical-align: top;
+    margin: 3px;
+    cursor: pointer;
+}
+.fullscreen-metadata .title{
+    font-family: 'Lyon Display Web', Georgia, Times;
+    font-size: 18px;
+    display: inline-block;
+    width: 350px;
+    margin: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+.fullscreen-metadata .page-tooltip{
+    font-weight: normal;
+    font-size: 10px;
+    min-width: 120px;
+    line-height: 21px;
+    display: block;
+    position: absolute;
+    z-index: 5000;
+    top: 100%;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    -o-transform: translateX(-50%);
+    transform: translateX(-50%);
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+    background: white;
+    color: black;
+    padding: 2px 15px 0px;
+    opacity: 0;
+    -webkit-transition: opacity linear 0.3s;
+    -moz-transition: opacity linear 0.3s;
+    transition: opacity linear 0.3s;
+}
+.fullscreen-metadata:hover .page-tooltip{
+    opacity: 1;
+}
 
-    .fullscreen-metadata .caption-link{
-        display: inline-block;
-        float: left;
-        font-size: 12px;
-        cursor: pointer;
-        border-bottom: 1px dotted #373a3c;
-    }
+.fullscreen-metadata .caption-link{
+    display: inline-block;
+    float: left;
+    font-size: 12px;
+    cursor: pointer;
+    border-bottom: 1px dotted #373a3c;
+}
 
 .caption-cntnr{
     display: block;
@@ -377,4 +378,85 @@ $desktop: 992px;*/
     padding: 0px;
     margin: 0 5px;
     cursor: pointer;
+}
+
+/** OpenSeaDragon Overrides **/
+
+
+.referencestrip {
+    position: absolute !important;
+    bottom: 0px !important;
+    height: 200px !important;
+    min-width: 500px !important;
+    width: 100% !important;
+    display: block !important;
+    float: none !important;
+    margin: 0px !important;
+    opacity: 1 !important;
+    white-space: nowrap !important;
+    overflow-x: scroll !important;
+    overflow-y: hidden !important;
+    touch-action: auto !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.referencestrip::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+#referencestrip > div {
+    /* background: rgb(153, 153, 153) */
+    background: rgb(0,0,0) !important;
+    padding: 0px !important;
+    margin: 0px 5px !important;
+}
+
+.referencestrip > div[style^="background: rgb(153, 153, 153)"] {
+/* background:  #000 !important; */
+}
+
+.referencestrip > div[style^="background: rgb(153, 153, 153)"] canvas {
+    border: 2px solid #C9510D !important;
+    padding: 0px !important;
+}
+
+.referencestrip::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(255,255,255,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.7);
+    width: 5px;
+}
+
+/* Select BOTTOM LEFT positioning div */
+.openseadragon-canvas + div + div + div + div {
+    position: static !important;
+}
+
+.referencestrip > div {
+    background: #000 !important;
+    border: 2px solid transparent !important;
+    margin: 0px 5px !important;
+    display: inline-block !important;
+    float: none !important;
+    height: 180px !important;
+    width: 150px !important;
+    position: relative !important;
+    touch-action: auto !important;
+    padding: 60px 0px 0px 0px !important;
+    cursor: pointer !important;
+}
+
+.navigator {
+    position: absolute !important;
+    bottom: 120px !important;
+    z-index: 1 !important;
+    left: 10px !important;
+    border: 3px solid rgb(0,0,0) !important;
+    opacity: 0.95;
+}
+
+[class$="-displayregion"] {
+    border: 2px solid rgb(224, 11, 11) !important;
 }
