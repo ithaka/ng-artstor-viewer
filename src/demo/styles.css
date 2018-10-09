@@ -126,6 +126,7 @@ h4 {
   position: relative !important;
   touch-action: auto !important;
   padding: 60px 0px 0px 0px !important;
+  cursor: pointer !important;
 }
 
 .navigator {

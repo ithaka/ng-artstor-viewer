@@ -231,8 +231,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // OpenSeaDragon Initializer
         this.osdViewer = new OpenSeadragon({
             id: this.osdViewerId,
-            // defaultZoomLevel: 1.2, // We don't want the image to be covered on load
-            // visibilityRatio: 0.2, // Determines percentage of background that has to be covered by the image while panning 
             // prefix for Icon Images
             prefixUrl: this._assetService.getUrl() + 'assets/img/osd/',
             tileSources: this.tileSource,
@@ -246,21 +244,24 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
                 pinchToZoom: true
             },
             controlsFadeLength: 500,
-            //   debugMode: true,
             zoomInButton: 'zoomIn-' + this.osdViewerId,
             zoomOutButton: 'zoomOut-' + this.osdViewerId,
             homeButton: 'zoomFit-' + this.osdViewerId,
             previousButton: 'previousButton-' + this.osdViewerId,
             nextButton: 'nextButton-' + this.osdViewerId,
-            initialPage: 1,
+            initialPage: 0,
             showNavigator: true,
             navigatorPosition: 'BOTTOM_LEFT',
             navigatorSizeRatio: 0.15,
-            // viewportMargins: {
-            //     bottom: 100
-            // },
+            viewportMargins: {
+                // Center the image when reference strip shows
+                bottom: this.isMultiView ? 190 : 0
+            },
             timeout: 60000,
-            useCanvas: false
+            // useCanvas: false,
+            // defaultZoomLevel: 1.2, // We don't want the image to be covered on load
+            // visibilityRatio: 0.2, // Determines percentage of background that has to be covered by the image while panning 
+            // debugMode: true,
         });
 
         // ---- Use handler in case other error crops up
