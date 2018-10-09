@@ -84,6 +84,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     @Output() prevPage = new EventEmitter()
     @Output() removeAsset = new EventEmitter()
     @Output() assetDrawer = new EventEmitter()
+    @Output() multiViewHelp = new EventEmitter()
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
@@ -486,6 +487,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
      */
     private disableContextMenu(event: Event): boolean{
         return false;
+    }
+
+    /**
+     * Is Multi View help output defined
+     */
+    public hasMultiViewHelp(): boolean {
+        return this.multiViewHelp.observers.length > 0
     }
 }
 

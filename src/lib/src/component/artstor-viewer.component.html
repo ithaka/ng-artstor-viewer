@@ -28,7 +28,7 @@
     </div>
     <div *ngIf="isMultiView" class="asset-viewer_multi-view-info">
       <b>{{ multiViewPage }}</b> of <b>{{ multiViewCount }}</b>
-      <button class="help-icon">?</button>
+      <button *ngIf="hasMultiViewHelp()" (click)="multiViewHelp.emit()" class="help-icon">?</button>
     </div>
     <div class="fullscreen-metadata" *ngIf="isFullscreen" [class.slideAway]="!showCaption">
       <div class="vertical-center-wrap"><i class="icon icon-direction icon-left" *ngIf="assetCompareCount == 1 && !quizMode" [class.disabled]="assetNumber <= 1" title="Previous in results" (click)="prevPage.emit()"></i>
