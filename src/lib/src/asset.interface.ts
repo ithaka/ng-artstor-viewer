@@ -162,16 +162,19 @@ export class Asset {
         this.typeName = this.initTypeName(data.object_type_id)
         this.disableDownload =  data.download_size === '0,0'
         this.SSID = data.SSID
-        // this.fileName = data.fileProperties.find((obj) => {
-        //     return !!obj && !!obj.fileName
-        // }).fileName
-        // if(!this.fileName) {
-        //     this.fileName = ""
-        // }
+        // Set filename
+        if (this.filePropertiesArray && this.filePropertiesArray[0]){
+            let fileProperty = this.filePropertiesArray.find((obj) => {
+                return !!obj && !!obj.fileName
+            })
+            this.fileName = fileProperty ? fileProperty.fileName : 'file'
+        } else {
+            this.fileName = 'file'
+        }
         this.updated_on = data.updated_on
         // Set Download information
-        // let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
-        // this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
+        let fileExt = this.fileName.substr(this.fileName.lastIndexOf('.'), this.fileName.length - 1)
+        this.downloadName = this.title.replace(/\./g,'-') + '.' + fileExt
         this.downloadLink = this.buildDownloadLink(data)
         data.viewer_data && (this.viewerData = data.viewer_data)
 
