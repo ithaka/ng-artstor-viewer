@@ -241,7 +241,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             referenceStripScroll: 'horizontal',
             autoHideControls: false,
             gestureSettingsMouse: {
-                scrollToZoom: false,
+                scrollToZoom: true,
                 pinchToZoom: true
             },
             controlsFadeLength: 500,
