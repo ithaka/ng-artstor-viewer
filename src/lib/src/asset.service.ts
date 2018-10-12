@@ -145,6 +145,7 @@ export class AssetService {
             collection_id: data.collection_id,
             collection_name: data.collection_name,
             collection_type: data.collection_type,
+            image_compound_urls: data.image_compound_urls,
             contributinginstitutionid: data.contributinginstitutionid,
             personalCollectionOwner: data.personalCollectionOwner,
             download_size: data.downloadSize || data.download_size || '1024,1024',
@@ -202,6 +203,7 @@ export interface AssetData {
   collection_id: string
   collection_name: string
   collection_type: number
+  image_compound_urls: string[]
   contributinginstitutionid: number
   personalCollectionOwner: number
   download_size: string
@@ -235,6 +237,7 @@ interface AssetDataResponse {
   collection_id: string
   collection_name: string
   collection_type: number
+  image_compound_urls: string[]
   contributinginstitutionid: number
   personalCollectionOwner: number
   downloadSize?: string

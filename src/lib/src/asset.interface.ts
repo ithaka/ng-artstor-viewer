@@ -25,6 +25,7 @@ export class Asset {
     collections: CollectionValue[]
     collectionId: string
     collectionName: string
+    imageMultiviewUrls: Array<string>
     SSID: string
     fileName: string
     updated_on: string
@@ -152,6 +153,7 @@ export class Asset {
         this.collections = data.collections
         this.collectionId = data.collection_id
         this.collectionName = data.collection_name
+        this.imageMultiviewUrls = data.image_compound_urls ? data.image_compound_urls : []
         this.filePropertiesArray = data.fileProperties
         this.collectionType = data.collection_type
         this.contributinginstitutionid = data.contributinginstitutionid
