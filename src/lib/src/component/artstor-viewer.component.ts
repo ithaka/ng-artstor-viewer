@@ -325,6 +325,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
             // Format pano_xml url incase it comes badly formatted from backend 
             this.asset.viewerData.panorama_xml = this.asset.viewerData.panorama_xml.replace('stor//', 'stor/')
+            // Ensure URL uses relative protocol
+            this.asset.viewerData.panorama_xml = this.asset.viewerData.panorama_xml.replace('http://', '//')
 
             // Check if pano xml is available before loading pano
             this._http.get(this.asset.viewerData.panorama_xml, { headers: headers })
