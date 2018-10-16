@@ -1,4 +1,4 @@
-<div class="asset-viewer" [class.fullscreen]="isFullscreen" (contextmenu)="disableContextMenu($event)">
+<div class="asset-viewer" [class.fullscreen]="isFullscreen" [class.multi-view]="isMultiView" (contextmenu)="disableContextMenu($event)">
   <!-- Large thumbnail fallback 
       - Thumbnail is always showing, and hidden by other viewers placed on top
       - This allows search crawlers to find the thumbnail

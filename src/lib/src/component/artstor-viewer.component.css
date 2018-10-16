@@ -450,11 +450,16 @@ $desktop: 992px;*/
 
 .navigator {
     position: absolute !important;
-    bottom: 120px !important;
+    bottom: 10px !important;
     z-index: 1 !important;
     left: 10px !important;
     border: 3px solid rgb(0,0,0) !important;
     opacity: 0.95;
+    margin-bottom: 0px !important;
+}
+
+.multi-view .navigator {
+    bottom: 170px !important;
 }
 
 [class$="-displayregion"] {
