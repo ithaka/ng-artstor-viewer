@@ -237,7 +237,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             tileSources: this.tileSource,
             // Trigger conditionally if tilesource is an array of multiple sources
             sequenceMode: this.isMultiView,
-            showReferenceStrip: this.isMultiView,
+            // OpenSeaDragon bug workaround: Reference strip will not load on init
+            showReferenceStrip: false,
             referenceStripScroll: 'horizontal',
             autoHideControls: false,
             gestureSettingsMouse: {
@@ -290,25 +291,27 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.asset.viewportDimensions.containerSize = this.osdViewer.viewport.containerSize
             this.asset.viewportDimensions.contentSize = this.osdViewer.viewport._contentSize
             this.asset.viewportDimensions.zoom = value.zoom
-        });
+        })
 
         this.osdViewer.addOnceHandler('tile-load-failed', (e: Event) => {
             console.warn("OSD Loading tiles failed:", e)
             this.state = viewState.thumbnailFallback
             this.osdViewer.destroy();
-        });
+        })
 
         this.osdViewer.addOnceHandler('ready', () => {
             console.info("Tiles are ready");
             this.state = viewState.openSeaReady
-        });
+        })
 
-        // this.osdViewer.addHangler('open', (event) => {
-        //     var img = this.osdViewer.drawer.canvas.toDataURL("image/png");
-        //     console.log(img)
-        //     var downloadlink = document.getElementById("downloadViewViaAssetViewer");
-        //     downloadlink['href'] = img;
-        // })
+        this.osdViewer.addOnceHandler('tile-loaded', () => {
+            console.info("Tiles are loaded")
+            this.state = viewState.openSeaReady
+            // Load Reference Strip once viewer is ready
+            if (this.isMultiView) {
+                this.osdViewer.addReferenceStrip()
+            }
+        })
 
         if (this.osdViewer && this.osdViewer.ButtonGroup) {
             this.osdViewer.ButtonGroup.element.addClass('button-group');
