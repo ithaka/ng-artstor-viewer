@@ -52,11 +52,11 @@ export class Asset {
         panorama_xml?: string
     }
 
-    constructor(assetData: AssetData) {
+    constructor(assetData: AssetData, testEnv ?: boolean) {
         if (!assetData) {
             throw new Error('No data passed to construct asset')
         }
-        this.initAssetProperties(assetData)
+        this.initAssetProperties(assetData, testEnv)
     }
 
     private formatMetadata(metadata: MetadataField[]): FormattedMetadata {
@@ -139,7 +139,8 @@ export class Asset {
      * - Behaves like a delayed constructor
      * - Reports status via 'this.dataLoadedSource' observable
      */
-    private initAssetProperties(data: AssetData): void {
+    private initAssetProperties(data: AssetData, testEnv?: boolean): void {
+        let storUrl: string = testEnv ? '//stor.stage.artstor.org' : '//stor.artstor.org' 
         // Set array of asset metadata fields to Asset, and format
         if (data.metadata_json) {
             this.formattedMetadata = this.formatMetadata(data.metadata_json)
@@ -191,8 +192,7 @@ export class Asset {
                 let path = data.image_compound_urls[i]
                 // path = path.replace('/info.json','')
                 // data.image_compound_urls[i] = '//tsstage.artstor.org/rosa-iiif-endpoint-1.0-SNAPSHOT/fpx' + encodeURIComponent(path) + '/info.json'
-                data.image_compound_urls[i] = '//stor.stage.artstor.org/fcgi-bin/iipsrv.fcgi?IIIF=' + path
-                //encodeURIComponent(path) + '/info.json'
+                data.image_compound_urls[i] = storUrl + '/fcgi-bin/iipsrv.fcgi?IIIF=' + path
             }
             this.tileSource = data.image_compound_urls
         } else {

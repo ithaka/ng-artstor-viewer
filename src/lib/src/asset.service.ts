@@ -78,7 +78,7 @@ export class AssetService {
       })
       .map((assetData) => {
         console.log("data",assetData)
-        return new Asset(assetData)
+        return new Asset(assetData, this.testEnv)
       })
   }
 
