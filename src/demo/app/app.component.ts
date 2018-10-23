@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ArtstorViewer } from 'artstor-viewer';
 import { AppService } from './app.service';
 
+import { take } from 'rxjs/operators'
+
 @Component({
   selector: 'demo-app',
   templateUrl: './app.component.html'
@@ -23,7 +25,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._app.getUser(this.testEnv).take(1)
+    this._app.getUser(this.testEnv).pipe(take(1))
       .subscribe(data => {
         console.log("Got a user!", data)
         this.userHasSession = true

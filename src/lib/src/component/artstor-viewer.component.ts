@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription'
+import { Subscription } from 'rxjs'
+import { take } from 'rxjs/operators'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import * as OpenSeadragon from 'openseadragon';
@@ -330,7 +331,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
             // Check if pano xml is available before loading pano
             this._http.get(this.asset.viewerData.panorama_xml, { headers: headers })
-                .take(1)
+                .pipe(take(1))
                 .subscribe(
                     data => {
                        this.embedKrpano()

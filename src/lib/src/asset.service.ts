@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { Observable } from 'rxjs/Rx'
+import { Observable, of } from 'rxjs'
+import { map } from 'rxjs/operators'
 
 import { Asset } from './asset.interface'
 
@@ -68,12 +69,12 @@ export class AssetService {
           case 12:
           case 24:
             return this.getFpxInfo(assetData.object_id)
-              .map((res) => {
+              .pipe(map((res) => {
                 assetData.fpxInfo = res
                 return assetData
-              })
+              }))
           default: 
-            return Observable.of(assetData)
+            return of(assetData)
         }
       })
       .map((assetData) => {
@@ -96,7 +97,7 @@ export class AssetService {
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
         .get<MetadataResponse>( url, { headers: headers, withCredentials: true })
-        .map((res) => {
+        .pipe(map((res) => {
           if (!res.metadata[0]) {
             throw new Error('Unable to load metadata!')
           }
@@ -106,7 +107,7 @@ export class AssetService {
             assetData.groupId = groupId
           }
           return assetData
-        })
+        }))
   }
 
   /**
@@ -119,14 +120,14 @@ export class AssetService {
 
     return this._http
       .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag , { headers: headers })
-      .map((res) => {
+      .pipe(map((res) => {
           if (!res.metadata[0]) {
             throw new Error('Unable to load metadata via encrypted id!')
           }
           let data: AssetDataResponse = res.metadata[0]
           let assetData: AssetData = this.mapMetadata(data)
           return assetData
-      })
+      }))
   }
 
   /**
@@ -177,13 +178,13 @@ export class AssetService {
     let headers: HttpHeaders = new HttpHeaders().set('Content-Type', 'application/json')
     return this._http
         .get<ImageFPXResponse>(requestUrl, { headers: headers, withCredentials: true })
-        .map((res) => {
+        .pipe(map((res) => {
             // replace imageUrl with stage url if we are in rest mode
             if (this.testEnv) {
                 res.imageUrl = res.imageUrl.replace('kts.artstor','kts.stage.artstor')
             }
             return res
-        })
+        }))
   }
 }
 

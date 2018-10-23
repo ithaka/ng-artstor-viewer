@@ -16,5 +16,8 @@
       "es2015",
       "dom"
     ]
+  },
+  "angularCompilerOptions" : {
+    "strictMetadataEmit" : true
   }
 }
