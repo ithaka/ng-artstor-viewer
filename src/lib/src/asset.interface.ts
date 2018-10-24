@@ -1,7 +1,4 @@
-// import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { BehaviorSubject, Observable } from 'rxjs'
-
-// import { AssetService, AuthService } from './../shared';
+// Project Dependencies
 import { AssetData, MetadataField, FileProperty, CollectionValue } from './asset.service'
 
 export class Asset {

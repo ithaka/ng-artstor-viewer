@@ -1,6 +1,6 @@
 {
   "name": "artstor-viewer",
-  "version": "1.3.0-beta.1",
+  "version": "1.3.0-beta.2",
   "description": "Angular wrapper for the Artstor Universal Viewer",
   "main": "./bundles/artstor-viewer.umd.js",
   "module": "./artstor-viewer.es5.js",
@@ -38,13 +38,13 @@
     "launch": "yarn release && yarn build && npm publish dist"
   },
   "peerDependencies": {
-    "@angular/core": ">=5.0.0 <6.0.0"
+    "@angular/core": "^6.1.10"
   },
   "devDependencies": {
+    "@angular/core": "^6.1.10",
     "@angular/common": "^6.1.10",
     "@angular/compiler": "^6.1.10",
     "@angular/compiler-cli": "^6.1.10",
-    "@angular/core": "^6.1.10",
     "@angular/platform-browser": "^6.1.10",
     "@angular/platform-browser-dynamic": "^6.1.10",
     "@types/jasmine": "2.5.36",

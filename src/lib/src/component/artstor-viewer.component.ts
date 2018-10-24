@@ -2,10 +2,10 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { Subscription } from 'rxjs'
 import { take } from 'rxjs/operators'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import * as OpenSeadragon from 'openseadragon'
 
-import * as OpenSeadragon from 'openseadragon';
-import '../viewers/krpano.js';
 // Internal Dependencies
+import '../viewers/krpano.js'
 import { Asset } from "../asset.interface"
 import { AssetService } from '../asset.service'
 
