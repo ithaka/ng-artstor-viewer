@@ -1,5 +1,5 @@
 // Project Dependencies
-import { AssetData, MetadataField, FileProperty, CollectionValue } from './asset.service'
+import { AssetData, MetadataField, FileProperty, CollectionValue } from './component/artstor-viewer.component'
 
 export class Asset {
     id: string
@@ -217,6 +217,6 @@ export class Asset {
     }
 }
 
-interface FormattedMetadata {
+export interface FormattedMetadata {
     [fieldName: string]: string[]
 }
