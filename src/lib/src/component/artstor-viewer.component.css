@@ -147,6 +147,7 @@ $desktop: 992px;*/
     bottom: 145px;
     z-index: 1000;
     color: #fff;
+    font-family: Verdana;
 }
 
 
@@ -417,8 +418,20 @@ $desktop: 992px;*/
 /* background:  #000 !important; */
 }
 
+.referencestrip canvas {
+    opacity: 0.5;
+    cursor:  pointer !important;
+}
+.referencestrip .displayregion{
+    cursor: pointer !important;
+}
+.asset-viewer__edge-arrows .btn:disabled{
+    cursor: default !important;
+}
+
 .referencestrip > div[style^="background: rgb(153, 153, 153)"] canvas {
-    border: 2px solid #C9510D !important;
+    /* border: 2px solid #C9510D !important; */
+    opacity: 1 !important;
     padding: 0px !important;
 }
 
