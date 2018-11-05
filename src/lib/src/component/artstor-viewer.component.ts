@@ -89,6 +89,12 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     // Emits fully formed asset object
     @Output() assetMetadata = new EventEmitter()
 
+    @Output() multiViewPageViaArrow = new EventEmitter()
+    @Output() multiViewPageViaThumbnail = new EventEmitter()
+
+    // Flag to differentiate the page event between arrow pressed and thumbnail click
+    private multiViewArrowPressed: boolean = false
+
     private initialized: boolean = false
     private _asset: Asset
     private assetSub: Subscription
@@ -278,10 +284,24 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.asset.viewportDimensions.center = value.center
         });
 
+        this.osdViewer.previousButton.addHandler('press', (value: any) => {
+            this.multiViewArrowPressed = true
+        })
+        this.osdViewer.nextButton.addHandler('press', (value: any) => {
+            this.multiViewArrowPressed = true
+        })
+
         this.osdViewer.addHandler('page', (value: {page: number, eventSource: any, userData?: any}) => {
             let index = value.page
             // Set current view "page" number
             this.multiViewPage = index + 1
+
+            if(this.multiViewArrowPressed){
+                this.multiViewArrowPressed = false
+                this.multiViewPageViaArrow.emit()
+            } else {
+                this.multiViewPageViaThumbnail.emit()
+            }
         })
 
         this.osdViewer.addHandler('zoom', (value: any) => {
