@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
+import { Angulartics2 } from 'angulartics2'
 
 import * as OpenSeadragon from 'openseadragon';
 import '../viewers/krpano.js';
@@ -99,7 +100,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(
         private _http: HttpClient, // TODO: move _http into a service
-        private _assetService: AssetService
+        private _assetService: AssetService,
+        private angulartics: Angulartics2
     ) { 
         if(!this.index) {
             this.index = 0
@@ -372,6 +374,8 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public togglePresentationMode(): void {
+        // Add Google Analytics to track fullscreen button
+        this.angulartics.eventTrack.next({ action: 'Enter Fullscreen', properties: { label: this._assetId } })
         // Make the body go full screen.
         var elem = document.body;
 
