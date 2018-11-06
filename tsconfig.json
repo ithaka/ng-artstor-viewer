@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "es2015",
-    "allowJs": true,
+    "allowJs": false,
     "rootDir": "./",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -16,5 +16,8 @@
       "es2015",
       "dom"
     ]
+  },
+  "angularCompilerOptions" : {
+    "strictMetadataEmit" : true
   }
 }
