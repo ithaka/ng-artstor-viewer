@@ -284,13 +284,6 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             this.asset.viewportDimensions.center = value.center
         });
 
-        this.osdViewer.previousButton.addHandler('press', (value: any) => {
-            this.multiViewArrowPressed = true
-        })
-        this.osdViewer.nextButton.addHandler('press', (value: any) => {
-            this.multiViewArrowPressed = true
-        })
-
         this.osdViewer.addHandler('page', (value: {page: number, eventSource: any, userData?: any}) => {
             let index = value.page
             // Set current view "page" number
@@ -330,6 +323,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // Load Reference Strip once viewer is ready
             if (this.isMultiView) {
                 this.osdViewer.addReferenceStrip()
+
+                this.osdViewer.previousButton.addHandler('press', () => {
+                    this.multiViewArrowPressed = true
+                })
+                this.osdViewer.nextButton.addHandler('press', () => {
+                    this.multiViewArrowPressed = true
+                })
             }
         })
 
