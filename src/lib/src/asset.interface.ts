@@ -1,8 +1,5 @@
-// import { HttpClient, HttpHeaders } from '@angular/common/http'
-import { BehaviorSubject, Observable } from 'rxjs/Rx'
-
-// import { AssetService, AuthService } from './../shared';
-import { AssetData, MetadataField, FileProperty, CollectionValue } from './asset.service'
+// Project Dependencies
+import { AssetData, MetadataField, FileProperty, CollectionValue } from './component/artstor-viewer.component'
 
 export class Asset {
     id: string
@@ -220,6 +217,6 @@ export class Asset {
     }
 }
 
-interface FormattedMetadata {
+export interface FormattedMetadata {
     [fieldName: string]: string[]
 }
