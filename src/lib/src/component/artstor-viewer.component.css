@@ -26,8 +26,8 @@ $desktop: 992px;*/
     padding: 0;
     z-index: 0;
     position: relative;
+    height: 90vh;
     min-height: 600px;
-    min-height: 90vh;
     overflow: hidden;
 }
 
