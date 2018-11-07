@@ -144,7 +144,7 @@ $desktop: 992px;*/
 .asset-viewer_multi-view-info {
     position: absolute;
     left: 21px;
-    bottom: 145px;
+    bottom: 147px;
     z-index: 1000;
     color: #fff;
     font-family: Verdana;
@@ -398,8 +398,8 @@ $desktop: 992px;*/
     overflow-x: scroll !important;
     overflow-y: hidden !important;
     touch-action: auto !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
 }
 
 .referencestrip::-webkit-scrollbar {
