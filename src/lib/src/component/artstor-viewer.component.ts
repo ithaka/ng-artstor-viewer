@@ -327,6 +327,9 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // Load Reference Strip once viewer is ready
             if (this.isMultiView) {
                 this.osdViewer.addReferenceStrip()
+                
+                this.osdViewer.nextButton.element.title = 'Next Item'
+                this.osdViewer.previousButton.element.title = 'Previous Item'
 
                 this.osdViewer.previousButton.addHandler('press', () => {
                     this.multiViewArrowPressed = true
