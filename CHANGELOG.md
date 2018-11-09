@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.3.3"></a>
+## [1.3.3](https://github.com/ithaka/ng-artstor-viewer/compare/v1.3.1...v1.3.3) (2018-11-09)
+
+
+
 <a name="1.3.2"></a>
 ## [1.3.2](https://github.com/ithaka/ng-artstor-viewer/compare/v1.2.6...v1.3.2) (2018-11-07)
 
