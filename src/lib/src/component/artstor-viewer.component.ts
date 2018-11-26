@@ -1,17 +1,20 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewEncapsulation, PLATFORM_ID, Inject } from '@angular/core';
 import { Subscription, Observable, of } from 'rxjs'
 import { take, map, mergeMap } from 'rxjs/operators'
 import { HttpClient, HttpHeaders } from '@angular/common/http'
-import * as OpenSeadragon from 'openseadragon'
+// import * as OpenSeadragon from 'openseadragon'
 
 // Internal Dependencies
 import '../viewers/krpano.js'
 import { Asset } from "../asset.interface"
+import { isPlatformBrowser } from '@angular/common';
 // import { AssetService, ImageFPXResponse } from '../asset.service'
 
 // Browser API delcarations
 declare var ActiveXObject: any
 declare var embedpano: any
+// Provided by inline script tag
+declare var OpenSeadragon: any
 
 export enum viewState {
   loading, // 0
@@ -117,13 +120,18 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     public multiViewPage: number = 1
     public multiViewCount: number = 1
 
+    // Determines if loading on server or browser
+    private isBrowser: boolean
+
     constructor(
-        private _http: HttpClient // TODO: move _http into a service
+        private _http: HttpClient, // TODO: move _http into a service
+        @Inject(PLATFORM_ID) private platformId
         // private: AssetService
     ) { 
         if(!this.index) {
             this.index = 0
         }
+        this.isBrowser = isPlatformBrowser(platformId)
     }
 
     ngOnInit() {
@@ -195,24 +203,28 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         this.state = viewState.thumbnailFallback
         if (this.thumbnailMode) { return } // leave state on thumbnail if thumbnail mode is triggered
 
-        // Object types that need loaders
-        switch (asset.typeName) {
-            case 'image':
-                // Image, try IIF
-                this.loadIIIF();
-                break;
-            case 'audio':
-                // Kaltura media
-                this.loadKaltura();
-                // this.state = viewState.audioFallback
-                break;
-            case 'kaltura':
-                // Kaltura media
-                this.loadKaltura();
-                break;
-            case 'panorama':
-                this.loadKrpanoViewer();
-                break;
+        if (this.isBrowser) {
+            // Object types that need loaders
+            switch (asset.typeName) {
+                case 'image':
+                    // Image, try IIF
+                    this.loadIIIF();
+                    break;
+                case 'audio':
+                    // Kaltura media
+                    this.loadKaltura();
+                    // this.state = viewState.audioFallback
+                    break;
+                case 'kaltura':
+                    // Kaltura media
+                    this.loadKaltura();
+                    break;
+                case 'panorama':
+                    this.loadKrpanoViewer();
+                    break;
+            }
+        } else {
+            this.thumbnailMode = true
         }
     }
 
