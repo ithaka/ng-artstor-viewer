@@ -624,7 +624,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         let referrer: string = document.referrer
     
         return this._http
-          .get<MetadataResponse>(this.getUrl() + "api/v1/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag , { headers: headers })
+          .get<MetadataResponse>(this.getUrl() + "api/v2/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag , { headers: headers })
           .pipe(map((res) => {
               if (!res.metadata[0]) {
                 throw new Error('Unable to load metadata via encrypted id!')
