@@ -82,6 +82,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
     // Optional Inputs
     @Input() legacyFlag: boolean
+    @Input() openLibraryFlag: boolean
 
     // Optional Outputs
     @Output() fullscreenChange = new EventEmitter()
@@ -169,7 +170,7 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         // Set viewer to "loading"
         this.state = viewState.loading
         
-        this.buildAsset(assetId, {groupId, legacyFlag: this.legacyFlag})
+        this.buildAsset(assetId, {groupId, legacyFlag: this.legacyFlag, openLib: this.openLibraryFlag })
             .subscribe((asset) => {
                 // Replace <br/> tags from title, creator & date values with a space
                 asset.title = asset.title.replace(/<br\s*[\/]?>/gi, ' ')
@@ -561,10 +562,10 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     
-      public buildAsset(assetId: string, { groupId = '', legacyFlag = true }={}): Observable<Asset> {
+      public buildAsset(assetId: string, { groupId = '', legacyFlag = true, openLib = false }={}): Observable<Asset> {
         let metadataObservable
         if (this.encrypted) {
-          metadataObservable = this.getEncryptedMetadata(assetId, legacyFlag)
+          metadataObservable = this.getEncryptedMetadata(assetId, legacyFlag, openLib)
         } else {
           metadataObservable = this.getMetadata(assetId, { groupId, legacyFlag })
         }
@@ -619,12 +620,17 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
          * Call to API which returns an asset, given an encrypted_id
          * @param token The encrypted token that you want to know the asset id for
          */
-      public getEncryptedMetadata(secretId: string, legacyFlag?: boolean): Observable<any> {
+      public getEncryptedMetadata(secretId: string, legacyFlag?: boolean, openLib?: boolean): Observable<any> {
         let headers: HttpHeaders = new HttpHeaders({ fromKress: 'true'})
         let referrer: string = document.referrer
+        let url: string = this.getUrl() + "api/v2/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag 
+
+        if (openLib) {
+            url += '&openLib=' + openLib
+        }
     
         return this._http
-          .get<MetadataResponse>(this.getUrl() + "api/v2/items/resolve?encrypted_id=" + encodeURIComponent(secretId) + "&ref=" + encodeURIComponent(referrer) + '&legacy=' + legacyFlag , { headers: headers })
+          .get<MetadataResponse>(url, { headers: headers })
           .pipe(map((res) => {
               if (!res.metadata[0]) {
                 throw new Error('Unable to load metadata via encrypted id!')
