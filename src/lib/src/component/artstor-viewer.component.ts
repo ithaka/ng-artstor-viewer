@@ -251,6 +251,13 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
             // OpenSeaDragon bug workaround: Reference strip will not load on init
             showReferenceStrip: false,
             referenceStripScroll: 'horizontal',
+            /**
+             * Workaround: Turn off "lazy loading" in reference strip
+             * OpenSeaDragon uses panelWidth to calc which reference images to load: 
+             * https://github.com/openseadragon/openseadragon/blob/869a3f6a134cdd143347b215a5da7796f8a7356d/src/referencestrip.js#L410
+             * This functionality is arguably broken, so by passing a small sizeRatio, OSD determines it should load ~100 thumbs at a time
+             */
+            referenceStripSizeRatio: 0.01,
             autoHideControls: false,
             gestureSettingsMouse: {
                 scrollToZoom: true,
