@@ -12,7 +12,11 @@
     map: {
       // our app is within the app folder
       app: 'app',
-
+      'rxjs/internal/util': 'npm:rxjs/internal/util',
+      'rxjs/internal/operators': 'npm:rxjs/internal/operators',
+      'rxjs/internal': 'npm:rxjs/internal',
+      'rxjs/operators': 'npm:rxjs/operators',
+      'rxjs': 'npm:rxjs/bundles/rxjs.umd.js',
       // angular bundles
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
       '@angular/common/http' : 'npm:@angular/common/bundles/common-http.umd.js',
@@ -27,7 +31,6 @@
       'openseadragon': 'npm:openseadragon/build/openseadragon/openseadragon.js',
 
       // other libraries
-      'rxjs': 'npm:rxjs',
     },
     // packages tells the System loader how to load when no filename and/or no extension
     packages: {
@@ -45,6 +48,15 @@
       'rxjs/operators': {
         defaultExtension: 'js',
         main: 'index'
+      },
+      'rxjs/internal': {
+        defaultExtension: 'js'
+      },
+      'rxjs/internal/util': {
+        defaultExtension: 'js'
+      },
+      'rxjs/internal/operators': {
+        defaultExtension: 'js'
       },
       'artstor-viewer': {
         main: 'index.js',
