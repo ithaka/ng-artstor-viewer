@@ -152,6 +152,11 @@ export class ArtstorViewer implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy() {
+        // Destroy previous viewers, otherwise canvases will bog down CPU over time
+        if (this.osdViewer) {
+            this.osdViewer.destroy()
+        }
+
         this.subscriptions.forEach((sub) => {
             sub.unsubscribe();
         });
